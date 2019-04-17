@@ -23,8 +23,11 @@ module Dotpretty
         })
       end
 
-      def transition(event, next_state)
-        transitions[event] = next_state
+      def transition(event, next_state, action = nil)
+        transitions[event] = {
+          action: action,
+          next_state: next_state
+        }
       end
 
       private
@@ -33,13 +36,14 @@ module Dotpretty
 
     end
 
-    def self.build(&definition)
-      builder = Dotpretty::StateMachineBuilder.new
+    def self.build(observer, &definition)
+      builder = Dotpretty::StateMachineBuilder.new(observer)
       builder.instance_eval(&definition)
       return builder.build
     end
 
-    def initialize
+    def initialize(observer)
+      self.observer = observer
       self.states = {}
     end
 
@@ -52,13 +56,14 @@ module Dotpretty
     def build
       Dotpretty::StateMachine.new({
         initial_state: initial_state,
+        observer: observer,
         states: states
       })
     end
 
     private
 
-    attr_accessor :initial_state, :states
+    attr_accessor :initial_state, :observer, :states
 
   end
 end

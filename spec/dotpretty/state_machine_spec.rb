@@ -3,8 +3,8 @@ require "dotpretty/state_machine"
 
 describe Dotpretty::StateMachine do
 
-  def build(&definition)
-    return Dotpretty::StateMachine.build(&definition)
+  def build(observer=nil, &definition)
+    return Dotpretty::StateMachine.build(observer, &definition)
   end
 
   describe "Building the state machine" do
@@ -52,6 +52,21 @@ describe Dotpretty::StateMachine do
       basic_machine.trigger(:unknown_event)
 
       expect(basic_machine.current_state_name).to eq(:a)
+    end
+  end
+
+  describe "Transition actions" do
+    it "is triggered when transitioning" do
+      observer = double("State Observer", some_action: nil)
+      basic_machine = build(observer) do
+        state :a do
+          transition :go_to_b, :b, :some_action
+        end
+      end
+
+      expect(observer).to receive(:some_action)
+
+      basic_machine.trigger(:go_to_b)
     end
   end
 end
