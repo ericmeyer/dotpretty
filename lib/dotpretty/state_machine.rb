@@ -1,12 +1,7 @@
 require "dotpretty/state_details"
-require "dotpretty/state_machine_builder"
 
 module Dotpretty
   class StateMachine
-
-    def self.build(observer = nil, &definition)
-      return StateMachineBuilder.build(observer, &definition)
-    end
 
     def initialize(options)
       self.current_state_name = options.fetch(:initial_state)

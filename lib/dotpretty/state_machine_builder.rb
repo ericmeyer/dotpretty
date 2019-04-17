@@ -1,4 +1,5 @@
 require "dotpretty/state_details"
+require "dotpretty/state_machine"
 
 module Dotpretty
   class StateMachineBuilder
