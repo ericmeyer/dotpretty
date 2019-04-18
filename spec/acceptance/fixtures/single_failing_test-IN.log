@@ -1,0 +1,68 @@
+Build started 4/18/19 10:58:25 AM.
+     1>Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" on node 1 (Restore target(s)).
+     1>Restore:
+         Committing restore...
+         Assets file has not changed. Skipping assets file writing. Path: /path/to/workspace/SampleSolution/SampleProjectTests/obj/project.assets.json
+         Restore completed in 45.62 ms for /path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj.
+
+         NuGet Config files used:
+             /Users/eric/.nuget/NuGet/NuGet.Config
+
+         Feeds used:
+             https://api.nuget.org/v3/index.json
+     1>Done Building Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" (Restore target(s)).
+Build started, please wait...
+   1:7>Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" on node 1 (VSTest target(s)).
+   1:7>Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" (1:7) is building "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" (1:8) on node 1 (default targets).
+     1>GenerateTargetFrameworkMonikerAttribute:
+       Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+       CoreGenerateProgramFile:
+       Skipping target "CoreGenerateProgramFile" because all output files are up-to-date with respect to the input files.
+       CoreGenerateAssemblyInfo:
+       Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+       CoreCompile:
+       Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+       _CopyOutOfDateSourceItemsToOutputDirectory:
+       Skipping target "_CopyOutOfDateSourceItemsToOutputDirectory" because all output files are up-to-date with respect to the input files.
+       GenerateBuildDependencyFile:
+       Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+       GenerateBuildRuntimeConfigurationFiles:
+       Skipping target "GenerateBuildRuntimeConfigurationFiles" because all output files are up-to-date with respect to the input files.
+       CopyFilesToOutputDirectory:
+         SampleProjectTests -> /path/to/workspace/SampleSolution/SampleProjectTests/bin/Debug/netcoreapp2.1/SampleProjectTests.dll
+     1>Done Building Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" (default targets).
+Build completed.
+
+Test run for /path/to/workspace/SampleSolution/SampleProjectTests/bin/Debug/netcoreapp2.1/SampleProjectTests.dll(.NETCoreApp,Version=v2.1)
+Microsoft (R) Test Execution Command Line Tool Version 15.9.0
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.4.0 (64-bit .NET Core 4.6.27317.03)
+[xUnit.net 00:00:00.47]   Discovering: SampleProjectTests
+[xUnit.net 00:00:00.53]   Discovered:  SampleProjectTests
+[xUnit.net 00:00:00.53]   Starting:    SampleProjectTests
+[xUnit.net 00:00:00.70]       Assert.Equal() Failure
+[xUnit.net 00:00:00.70]       Expected: 1
+[xUnit.net 00:00:00.70]       Actual:   2
+[xUnit.net 00:00:00.70]       Stack Trace:
+[xUnit.net 00:00:00.71]         /path/to/workspace/SampleSolution/SampleProjectTests/UnitTest1.cs(15,0): at SampleProjectTests.UnitTest1.Test2()
+[xUnit.net 00:00:00.72]   Finished:    SampleProjectTests
+Failed   SampleProjectTests.UnitTest1.Test2
+Error Message:
+ Assert.Equal() Failure
+Expected: 1
+Actual:   2
+Stack Trace:
+   at SampleProjectTests.UnitTest1.Test2() in /path/to/workspace/SampleSolution/SampleProjectTests/UnitTest1.cs:line 15
+Passed   SampleProjectTests.UnitTest1.Test1
+
+Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.
+Test execution time: 1.6030 Seconds
+     1>Done Building Project "/path/to/workspace/SampleSolution/SampleProjectTests/SampleProjectTests.csproj" (VSTest target(s)) -- FAILED.
+
+Build FAILED.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.86
