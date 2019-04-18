@@ -11,9 +11,9 @@ module Dotpretty
 
     attr_reader :current_state_name
 
-    def trigger(event)
+    def trigger(event, *args)
       current_state_transitions.trigger(event) do |transition|
-        observer.send(transition[:action]) if transition[:action]
+        observer.send(transition[:action], *args) if transition[:action]
         self.current_state_name = transition[:next_state]
       end
     end
