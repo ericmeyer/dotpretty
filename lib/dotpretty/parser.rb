@@ -24,6 +24,7 @@ module Dotpretty
         state :reading_test_failure do
           transition :test_passed, :running_tests, :test_passed
           transition :received_failure_output, :reading_test_failure, :show_failure_details
+          transition :tests_completed, :done, :show_test_summary
         end
       end
     end
@@ -52,6 +53,8 @@ module Dotpretty
         if input_line.start_with?("Passed")
           match = input_line.match(/^Passed\s+(.+)$/)
           state_machine.trigger(:test_passed, match[1])
+        elsif input_line.start_with?("Total tests")
+          state_machine.trigger(:tests_completed, input_line)
         else
           state_machine.trigger(:received_failure_output, input_line)
         end

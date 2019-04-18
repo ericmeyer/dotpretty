@@ -15,7 +15,7 @@ module Dotpretty
     end
 
     def show_failure_details(details)
-      output.puts(details)
+      output.puts("#{details}")
     end
 
     def show_test_summary(summary)

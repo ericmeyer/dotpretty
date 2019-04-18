@@ -137,6 +137,29 @@ describe Dotpretty::Parser do
 
         expect(@output.string).to eq("Passed   SomeTest\n")
       end
+
+      it "stops parsing the failure when it encounters the test summary" do
+        @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
+        @parser.parse_line("Other info")
+        @parser.parse_line("Total tests: 1. Passed: 1. Failed: 0. Skipped: 0.")
+        @output.truncate(0)
+        @output.rewind
+
+        @parser.parse_line("Some info")
+
+        expect(@output.string).to eq("")
+      end
+
+      it "outputs the test summary" do
+        @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
+        @parser.parse_line("Other info")
+        @output.truncate(0)
+        @output.rewind
+
+        @parser.parse_line("Total tests: 1. Passed: 1. Failed: 0. Skipped: 0.")
+
+        expect(@output.string).to eq("\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
+      end
     end
 
     context "when the tests finish" do
