@@ -21,7 +21,7 @@ module Dotpretty
     private
 
     def current_state_transitions
-      states[current_state_name] || StateDetails.new(current_state_name)
+      states[current_state_name] || StateDetails.new({ transitions: {} })
     end
 
     attr_accessor :observer, :states
