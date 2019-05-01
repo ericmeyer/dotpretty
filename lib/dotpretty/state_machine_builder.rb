@@ -19,6 +19,7 @@ module Dotpretty
 
       def build
         StateDetails.new({
+          exit_action: exit_action,
           name: name,
           transitions: transitions
         })
@@ -31,9 +32,13 @@ module Dotpretty
         }
       end
 
+      def on_exit(action)
+        self.exit_action = action
+      end
+
       private
 
-      attr_accessor :name, :transitions
+      attr_accessor :exit_action, :name, :transitions
 
     end
 
