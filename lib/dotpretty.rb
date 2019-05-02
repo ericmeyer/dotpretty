@@ -1,0 +1,1 @@
+require "dotpretty/parser"
