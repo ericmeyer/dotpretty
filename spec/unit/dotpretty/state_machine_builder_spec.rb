@@ -139,4 +139,84 @@ describe Dotpretty::StateMachineBuilder do
     end
   end
 
+  describe "Entry actions" do
+    it "triggers when entering a state" do
+      observer = double("State Observer", some_action: nil)
+      basic_machine = build(observer) do
+        state :a do
+          transition :go_to_b, :b
+        end
+        state :b do
+          on_entry :some_action
+        end
+      end
+
+      expect(observer).to receive(:some_action).with("Some data")
+
+      basic_machine.trigger(:go_to_b, "Some data")
+    end
+
+    it "does not trigger when the state is unchanged" do
+      observer = double("State Observer", some_action: nil)
+      basic_machine = build(observer) do
+        state :a do
+          on_entry :some_action
+          transition :stay_in_a, :a
+        end
+      end
+
+      expect(observer).not_to receive(:some_action)
+
+      basic_machine.trigger(:stay_in_a)
+    end
+
+    class FakeObserver
+      attr_accessor :state_machine
+
+      def trigger_go_to_c
+        state_machine.trigger(:go_to_c)
+      end
+    end
+
+    it "performs the action after the state has been updated" do
+      observer = FakeObserver.new
+      basic_machine = build(observer) do
+        state :a do
+          transition :go_to_b, :b
+        end
+        state :b do
+          on_entry :trigger_go_to_c
+          transition :go_to_c, :c
+        end
+      end
+      observer.state_machine = basic_machine
+
+      basic_machine.trigger(:go_to_b)
+
+      expect(basic_machine.current_state_name).to eq(:c)
+    end
+  end
+
+  describe "Multiple actions for the same event" do
+    it "executes them in the correct order" do
+      observer = double("State Observer", entry_action: nil, exit_action: nil, transition_action: nil)
+      basic_machine = build(observer) do
+        state :a do
+          on_exit :exit_action
+          transition :go_to_b, :b, :transition_action
+        end
+        state :b do
+          on_entry :entry_action
+        end
+      end
+
+      expect(observer).to receive(:exit_action).ordered
+      expect(observer).to receive(:transition_action).ordered
+      expect(observer).to receive(:entry_action).ordered
+
+      basic_machine.trigger(:go_to_b)
+      expect(basic_machine.current_state_name).to eq(:b)
+    end
+  end
+
 end
