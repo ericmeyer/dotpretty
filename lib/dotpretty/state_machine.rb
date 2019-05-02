@@ -32,7 +32,6 @@ module Dotpretty
       states[current_state_name] || StateDetails.new({
         entry_action: nil,
         exit_action: nil,
-        name: nil,
         transitions: {}
       })
     end

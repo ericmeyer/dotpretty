@@ -21,7 +21,6 @@ module Dotpretty
         StateDetails.new({
           entry_action: entry_action,
           exit_action: exit_action,
-          name: name,
           transitions: transitions
         })
       end

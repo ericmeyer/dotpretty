@@ -1,7 +1,7 @@
 module Dotpretty
   class StateDetails
 
-    def initialize(transitions:, exit_action:, name:, entry_action:)
+    def initialize(transitions:, exit_action:, entry_action:)
       self.entry_action = entry_action
       self.exit_action = exit_action
       self.transitions = transitions
