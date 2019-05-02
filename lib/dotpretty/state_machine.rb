@@ -3,10 +3,10 @@ require "dotpretty/state_details"
 module Dotpretty
   class StateMachine
 
-    def initialize(options)
-      self.current_state_name = options.fetch(:initial_state)
-      self.observer = options.fetch(:observer)
-      self.states = options.fetch(:states)
+    def initialize(initial_state:, observer:, states:)
+      self.current_state_name = initial_state
+      self.observer = observer
+      self.states = states
     end
 
     attr_reader :current_state_name
@@ -24,7 +24,11 @@ module Dotpretty
     private
 
     def current_state_transitions
-      states[current_state_name] || StateDetails.new({ transitions: {} })
+      states[current_state_name] || StateDetails.new({
+        exit_action: nil,
+        name: nil,
+        transitions: {}
+      })
     end
 
     attr_accessor :observer, :states

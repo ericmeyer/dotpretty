@@ -1,9 +1,9 @@
 module Dotpretty
   class StateDetails
 
-    def initialize(options)
-      self.exit_action = options[:exit_action]
-      self.transitions = options[:transitions]
+    def initialize(transitions:, exit_action:, name:)
+      self.exit_action = exit_action
+      self.transitions = transitions
     end
 
     def trigger(event, &block)

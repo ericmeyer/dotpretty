@@ -1,8 +1,8 @@
 module Dotpretty
   class Reporter
 
-    def initialize(options)
-      self.output = options[:output]
+    def initialize(output:)
+      self.output = output
     end
 
     def build_completed

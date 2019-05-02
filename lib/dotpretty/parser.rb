@@ -4,9 +4,9 @@ require "dotpretty/state_machine_builder"
 module Dotpretty
   class Parser
 
-    def initialize(options)
-      self.output = options[:output]
-      self.state_machine = Dotpretty::StateMachineBuilder.build(Dotpretty::Reporter.new(options)) do
+    def initialize(output:)
+      self.output = output
+      self.state_machine = Dotpretty::StateMachineBuilder.build(Dotpretty::Reporter.new(output: output)) do
         state :waiting do
           transition :build_started, :build_in_progress, :build_started
         end
