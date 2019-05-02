@@ -19,17 +19,21 @@ module Dotpretty
 
       def build
         StateDetails.new({
+          entry_action: entry_action,
           exit_action: exit_action,
-          name: name,
           transitions: transitions
         })
       end
 
-      def transition(event, next_state, action = nil)
+      def transition(event, next_state_name, action = nil)
         transitions[event] = {
           action: action,
-          next_state: next_state
+          next_state_name: next_state_name
         }
+      end
+
+      def on_entry(action)
+        self.entry_action = action
       end
 
       def on_exit(action)
@@ -38,7 +42,7 @@ module Dotpretty
 
       private
 
-      attr_accessor :exit_action, :name, :transitions
+      attr_accessor :entry_action, :exit_action, :name, :transitions
 
     end
 
