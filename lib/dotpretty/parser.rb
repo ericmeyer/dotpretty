@@ -8,7 +8,7 @@ module Dotpretty
     def initialize(options)
       self.output = options[:output]
       reporter = Dotpretty::Reporter.new({output: output})
-      aggregator = Dotpretty::Aggregator.new({reporter: reporter})
+      aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
         state :waiting do
           transition :build_started, :build_in_progress, :build_started
@@ -25,11 +25,16 @@ module Dotpretty
           transition :tests_completed, :done, :show_test_summary
         end
         state :reading_test_failure do
+          transition :received_input_line, :determine_failure_line
+        end
+        state :determine_failure_line do
+          on_entry :parse_failure_line
           transition :test_passed, :running_tests, :test_passed
           transition :received_failure_output, :reading_test_failure, :show_failure_details
           transition :tests_completed, :done, :show_test_summary
         end
       end
+      aggregator.state_machine = state_machine
     end
 
     def parse_line(input_line)
@@ -53,14 +58,7 @@ module Dotpretty
           state_machine.trigger(:tests_completed, input_line)
         end
       when :reading_test_failure
-        if input_line.start_with?("Passed")
-          match = input_line.match(/^Passed\s+(.+)$/)
-          state_machine.trigger(:test_passed, match[1])
-        elsif input_line.start_with?("Total tests")
-          state_machine.trigger(:tests_completed, input_line)
-        else
-          state_machine.trigger(:received_failure_output, input_line)
-        end
+        state_machine.trigger(:received_input_line, input_line)
       end
     end
 
