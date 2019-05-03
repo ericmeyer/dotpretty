@@ -17,5 +17,4 @@ Actual:   2
 Stack Trace:
    at SampleProjectTests.UnitTest1.Test1() in /path/to/workspace/SampleSolution/SampleProjectTests/UnitTest1.cs:line 10
 
-
 Total tests: 2. Passed: 0. Failed: 2. Skipped: 0.

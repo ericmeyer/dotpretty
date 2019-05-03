@@ -53,7 +53,7 @@ module Dotpretty
     end
 
     def track_failure_details(details)
-      current_failing_test[:details] << details
+      current_failing_test[:details] << details.rstrip if details.rstrip != ""
     end
 
     def show_test_summary(summary)
@@ -66,7 +66,7 @@ module Dotpretty
       })
     end
 
-    def report_failing_test(_)
+    def report_failing_test(*args)
       reporter.test_failed(current_failing_test)
     end
 
@@ -74,6 +74,8 @@ module Dotpretty
       if input_line.match(TEST_PASSED)
         state_machine.trigger(:done_reading_failure, input_line)
       elsif input_line.match(TEST_SUMMARY)
+        state_machine.trigger(:done_reading_failure, input_line)
+      elsif input_line.match(TEST_FAILED)
         state_machine.trigger(:done_reading_failure, input_line)
       else
         state_machine.trigger(:received_failure_output, input_line)

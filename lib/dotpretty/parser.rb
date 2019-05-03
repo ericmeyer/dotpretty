@@ -7,7 +7,7 @@ module Dotpretty
 
     def initialize(options)
       self.output = options[:output]
-      reporter = Dotpretty::Reporters::Basic.new({output: output})
+      reporter = options.fetch(:reporter, Dotpretty::Reporters::Basic.new({output: output}))
       self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
         state :waiting do
