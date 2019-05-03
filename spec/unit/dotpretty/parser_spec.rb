@@ -1,3 +1,6 @@
+RSpec.configure do |config|
+  config.filter_run_when_matching :focus
+end
 require "dotpretty/parser"
 require "stringio"
 
@@ -104,15 +107,17 @@ describe Dotpretty::Parser do
 
       it "shows a failing test" do
         @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
+        @parser.parse_line("Passed SomeTest")
 
-        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nPassed   SomeTest\n")
       end
 
       it "shows the failure details" do
         @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
         @parser.parse_line("Other info")
+        @parser.parse_line("Passed SomeTest")
 
-        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\nPassed   SomeTest\n")
       end
 
       it "stops parsing the failure when it encounters a passing test" do
@@ -125,17 +130,6 @@ describe Dotpretty::Parser do
         @parser.parse_line("Some info")
 
         expect(@output.string).to eq("")
-      end
-
-      it "outputs the next passing test" do
-        @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
-        @parser.parse_line("Other info")
-        @output.truncate(0)
-        @output.rewind
-
-        @parser.parse_line("Passed   SomeTest")
-
-        expect(@output.string).to eq("Passed   SomeTest\n")
       end
 
       it "stops parsing the failure when it encounters the test summary" do
@@ -153,12 +147,10 @@ describe Dotpretty::Parser do
       it "outputs the test summary" do
         @parser.parse_line("Failed   SampleProjectTests.UnitTest1.Test2")
         @parser.parse_line("Other info")
-        @output.truncate(0)
-        @output.rewind
 
         @parser.parse_line("Total tests: 1. Passed: 1. Failed: 0. Skipped: 0.")
 
-        expect(@output.string).to eq("\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\n\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
       end
     end
 
