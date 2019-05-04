@@ -1,5 +1,5 @@
 require "dotpretty/aggregator"
-require "dotpretty/reporter"
+require "dotpretty/reporters/basic"
 require "dotpretty/state_machine_builder"
 
 module Dotpretty
@@ -7,7 +7,7 @@ module Dotpretty
 
     def initialize(options)
       self.output = options[:output]
-      reporter = Dotpretty::Reporter.new({output: output})
+      reporter = Dotpretty::Reporters::Basic.new({output: output})
       self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
         state :waiting do
