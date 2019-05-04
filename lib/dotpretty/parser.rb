@@ -8,7 +8,7 @@ module Dotpretty
     def initialize(options)
       self.output = options[:output]
       reporter = Dotpretty::Reporter.new({output: output})
-      aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
+      self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
         state :waiting do
           transition :build_started, :build_in_progress, :build_started
@@ -17,20 +17,29 @@ module Dotpretty
           transition :build_completed, :ready_to_run_tests, :build_completed
         end
         state :ready_to_run_tests do
-          transition :starting_tests, :running_tests, :starting_tests
+          transition :tests_started, :waiting_for_test_input, :starting_tests
         end
-        state :running_tests do
-          transition :test_failed, :reading_test_failure, :test_failed
-          transition :test_passed, :running_tests, :test_passed
+        state :waiting_for_test_input do
+          transition :test_input_received, :parsing_test_input
+        end
+        state :parsing_test_input do
+          on_entry :parse_test_input
+          transition :received_other_input, :waiting_for_test_input
+          transition :test_failed, :waiting_for_failure_details, :reset_current_failing_test
+          transition :test_passed, :waiting_for_test_input, :test_passed
           transition :tests_completed, :done, :show_test_summary
         end
-        state :reading_test_failure do
-          transition :received_input_line, :determine_failure_line
+        state :waiting_for_failure_details do
+          transition :received_failure_details, :reading_failure_details
         end
-        state :determine_failure_line do
+        state :reading_failure_details do
           on_entry :parse_failure_line
-          transition :test_passed, :running_tests, :test_passed
-          transition :received_failure_output, :reading_test_failure, :show_failure_details
+          transition :done_reading_failure, :parsing_test_input, :report_failing_test
+          transition :received_failure_output, :waiting_for_failure_details, :track_failure_details
+        end
+        state :parsing_failure_line do
+          on_entry :parse_failure_line
+          transition :received_failure_output, :reading_failure_details, :track_failure_details
           transition :tests_completed, :done, :show_test_summary
         end
       end
@@ -38,33 +47,12 @@ module Dotpretty
     end
 
     def parse_line(input_line)
-      case state_machine.current_state_name
-      when :waiting
-        state_machine.trigger(:build_started)
-      when :build_in_progress
-        state_machine.trigger(:build_completed) if input_line.match(/^Build completed/)
-      when :ready_to_run_tests
-        if input_line.match(/^Starting test execution, please wait...$/)
-          state_machine.trigger(:starting_tests)
-        end
-      when :running_tests
-        if input_line.start_with?("Passed")
-          match = input_line.match(/^Passed\s+(.+)$/)
-          state_machine.trigger(:test_passed, match[1])
-        elsif input_line.start_with?("Failed")
-          match = input_line.match(/^Failed\s+(.+)$/)
-          state_machine.trigger(:test_failed, match[1])
-        elsif input_line.start_with?("Total tests")
-          state_machine.trigger(:tests_completed, input_line)
-        end
-      when :reading_test_failure
-        state_machine.trigger(:received_input_line, input_line)
-      end
+      aggregator.parse_line(input_line)
     end
 
     private
 
-    attr_accessor :output, :state_machine
+    attr_accessor :aggregator, :output, :state_machine
 
   end
 end

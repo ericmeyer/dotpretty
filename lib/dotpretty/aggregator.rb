@@ -1,10 +1,47 @@
 module Dotpretty
   class Aggregator
 
+    BUILD_COMPLETED = /^Build completed/
+    TEST_FAILED = /^Failed/
+    TEST_PASSED = /^Passed/
+    TEST_SUMMARY = /^Total tests/
+    TESTS_STARTED = /^Starting test execution, please wait...$/
+
     attr_accessor :state_machine
 
     def initialize(reporter:)
       self.reporter = reporter
+    end
+
+    def parse_line(input_line)
+      case state_machine.current_state_name
+      when :waiting
+        state_machine.trigger(:build_started)
+      when :build_in_progress
+        state_machine.trigger(:build_completed) if input_line.match(BUILD_COMPLETED)
+      when :ready_to_run_tests
+        state_machine.trigger(:tests_started) if input_line.match(TESTS_STARTED)
+      when :waiting_for_test_input
+        state_machine.trigger(:test_input_received, input_line)
+      when :waiting_for_failure_details
+        state_machine.trigger(:received_failure_details, input_line)
+      when :reading_failure_details
+        state_machine.trigger(:received_input_line, input_line)
+      end
+    end
+
+    def parse_test_input(input_line)
+      if input_line.match(TEST_PASSED)
+        match = input_line.match(/^Passed\s+(.+)$/)
+        state_machine.trigger(:test_passed, match[1])
+      elsif input_line.match(TEST_FAILED)
+        match = input_line.match(/^Failed\s+(.+)$/)
+        state_machine.trigger(:test_failed, match[1])
+      elsif input_line.match(TEST_SUMMARY)
+        state_machine.trigger(:tests_completed, input_line)
+      else
+        state_machine.trigger(:received_other_input)
+      end
     end
 
     def build_completed
@@ -15,7 +52,7 @@ module Dotpretty
       reporter.build_started
     end
 
-    def show_failure_details(details)
+    def track_failure_details(details)
       current_failing_test[:details] << details
     end
 
@@ -29,14 +66,15 @@ module Dotpretty
       })
     end
 
+    def report_failing_test(_)
+      reporter.test_failed(current_failing_test)
+    end
+
     def parse_failure_line(input_line)
-      if input_line.start_with?("Passed")
-        reporter.test_failed(current_failing_test)
-        match = input_line.match(/^Passed\s+(.+)$/)
-        state_machine.trigger(:test_passed, match[1])
-      elsif input_line.start_with?("Total tests")
-        reporter.test_failed(current_failing_test)
-        state_machine.trigger(:tests_completed, input_line)
+      if input_line.match(TEST_PASSED)
+        state_machine.trigger(:done_reading_failure, input_line)
+      elsif input_line.match(TEST_SUMMARY)
+        state_machine.trigger(:done_reading_failure, input_line)
       else
         state_machine.trigger(:received_failure_output, input_line)
       end
@@ -46,7 +84,7 @@ module Dotpretty
       reporter.starting_tests
     end
 
-    def test_failed(test_name)
+    def reset_current_failing_test(test_name)
       self.current_failing_test = {
         details: [],
         name: test_name
