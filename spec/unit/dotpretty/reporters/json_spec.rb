@@ -1,8 +1,13 @@
 require "dotpretty/reporters/json"
 require "json"
 require "stringio"
+require "fakes/reporter"
 
 describe Dotpretty::Reporters::Json do
+
+  it "implements the interface defined by Fakes::Reporter" do
+    expect(Dotpretty::Reporters::Json).to be_substitutable_for(Fakes::Reporter)
+  end
 
   describe "Showing the test summary" do
     context "when there have been no tests reported" do
