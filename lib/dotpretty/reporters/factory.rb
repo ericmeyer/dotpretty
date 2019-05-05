@@ -9,7 +9,7 @@ module Dotpretty
       def self.build_reporter(name, output)
         case name
         when Dotpretty::Reporters::Names::JSON
-          return Dotpretty::Reporters::Json.new({ output: output })
+          return Dotpretty::Reporters::Json.new(output)
         else
           return Dotpretty::Reporters::Basic.new({ output: output })
         end

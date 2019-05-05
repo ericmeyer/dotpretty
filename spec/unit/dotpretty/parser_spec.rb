@@ -6,7 +6,7 @@ describe Dotpretty::Parser do
 
   def build_parser(output)
     return Dotpretty::Parser.new({
-      reporter: Dotpretty::Reporters::Basic.new({ output: output })
+      reporter: Dotpretty::Reporters::Basic.new(output)
     })
   end
 

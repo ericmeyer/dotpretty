@@ -2,7 +2,7 @@ module Dotpretty
   module Reporters
     class Basic
 
-      def initialize(output:)
+      def initialize(output)
         self.output = output
       end
 
