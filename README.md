@@ -26,3 +26,21 @@ Ordinarily, you will probably want to suppress stderr output.
 |---|
 |`-h`, `--help`| Display this help | | |
 |`-r`, `--reporter`| Reporter to use to format output | basic | basic, json |
+
+## Development
+
+### System Requirements
+
+ * Ruby
+    * See `.ruby-version` file for specific version
+
+### Setup
+
+1. Fork repository (if needed)
+2. Clone repository
+3. `bundle install`
+
+### Tests
+
+ * `rake spec` runs unit tests followed by acceptance tests
+ * `bundle exec guard` starts a watcher to re-run tests
