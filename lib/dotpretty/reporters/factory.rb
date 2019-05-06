@@ -11,7 +11,7 @@ module Dotpretty
         when Dotpretty::Reporters::Names::JSON
           return Dotpretty::Reporters::Json.new(output)
         else
-          return Dotpretty::Reporters::Basic.new({ output: output })
+          return Dotpretty::Reporters::Basic.new(output)
         end
       end
 
