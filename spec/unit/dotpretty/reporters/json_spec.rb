@@ -9,11 +9,15 @@ describe Dotpretty::Reporters::Json do
     expect(Dotpretty::Reporters::Json).to be_substitutable_for(Fakes::Reporter)
   end
 
+  def build_json_reporter(output)
+    reporter = Dotpretty::Reporters::Json.new(output)
+  end
+
   describe "Showing the test summary" do
     context "when there have been no tests reported" do
       it "outputs an empty summary" do
         output = StringIO.new
-        reporter = Dotpretty::Reporters::Json.new({output: output})
+        reporter = build_json_reporter(output)
 
         reporter.show_test_summary({
           failedTests: 0,
@@ -32,7 +36,7 @@ describe Dotpretty::Reporters::Json do
     context "when has been one passing test" do
       it "outputs a summary with that test" do
         output = StringIO.new
-        reporter = Dotpretty::Reporters::Json.new({output: output})
+        reporter = build_json_reporter(output)
         reporter.test_passed("MyTest")
 
         reporter.show_test_summary({
@@ -55,7 +59,7 @@ describe Dotpretty::Reporters::Json do
     context "when has been one failing test" do
       it "outputs a summary with that test" do
         output = StringIO.new
-        reporter = Dotpretty::Reporters::Json.new({output: output})
+        reporter = build_json_reporter(output)
         reporter.test_failed({
           name: "FailingTest",
           details: ["1", "2"]

@@ -6,7 +6,9 @@ describe "Parsing test output" do
 
   def parse_input(filename)
     output = StringIO.new
-    parser = Dotpretty::Parser.new({ output: output })
+    parser = Dotpretty::Parser.new({
+      reporter: Dotpretty::Reporters::Basic.new(output)
+    })
 
     Fixtures.each_line(filename) do |line|
       parser.parse_line(line)

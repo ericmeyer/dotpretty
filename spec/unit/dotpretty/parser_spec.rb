@@ -1,10 +1,13 @@
 require "dotpretty/parser"
+require "dotpretty/reporters/basic"
 require "stringio"
 
 describe Dotpretty::Parser do
 
   def build_parser(output)
-    return Dotpretty::Parser.new({ output: output })
+    return Dotpretty::Parser.new({
+      reporter: Dotpretty::Reporters::Basic.new(output)
+    })
   end
 
   describe "Parsing input" do

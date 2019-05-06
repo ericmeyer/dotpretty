@@ -8,12 +8,8 @@ describe "Outputting JSON" do
 
   def parse_input(filename)
     output = StringIO.new
-    reporter = Dotpretty::Reporters::Json.new({ output: output })
-    parser = Dotpretty::Parser.new({
-      output: output,
-      reporter: reporter
-    })
-
+    reporter = Dotpretty::Reporters::Json.new(output)
+    parser = Dotpretty::Parser.new({ reporter: reporter })
     Fixtures.each_line(filename) do |line|
       parser.parse_line(line)
     end

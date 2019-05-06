@@ -4,7 +4,7 @@ module Dotpretty
   module Reporters
     class Json
 
-      def initialize(output:)
+      def initialize(output)
         self.output = output
         self.tests = []
       end

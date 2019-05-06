@@ -5,9 +5,7 @@ require "dotpretty/state_machine_builder"
 module Dotpretty
   class Parser
 
-    def initialize(options)
-      self.output = options[:output]
-      reporter = options.fetch(:reporter, Dotpretty::Reporters::Basic.new({output: output}))
+    def initialize(reporter:)
       self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
         state :waiting do

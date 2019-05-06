@@ -1,8 +1,36 @@
 #!/usr/bin/env ruby
 
 require "dotpretty/parser"
+require "dotpretty/reporters/factory"
+require "dotpretty/reporters/names"
+require "optparse"
 
-parser = Dotpretty::Parser.new({ output: STDOUT })
+options = {}
+OptionParser.new do |opts|
+
+  opts.banner = "Usage: dotnet test -v=normal Test.Project/ | dotnet [options]"
+
+  opts.on("-h", "--help", "Display this help") do
+    puts opts
+    exit
+  end
+
+  all_reporter_names = Dotpretty::Reporters::Names::ALL
+  reporter_message = ["Set reporter. Defaults to basic", "Available reporters: #{all_reporter_names.join(", ")}"]
+  opts.on("-rREPORTER", "--reporter=REPORTER", *reporter_message) do |reporter_name|
+    options[:reporter_name] = reporter_name
+  end
+
+  if STDIN.tty?
+    $stderr.puts opts.help
+    exit 1
+  end
+
+end.parse!
+
+
+reporter = Dotpretty::Reporters::Factory.build_reporter(options[:reporter_name], STDOUT)
+parser = Dotpretty::Parser.new({ reporter: reporter })
 
 STDIN.each_line do |line|
   parser.parse_line(line)
