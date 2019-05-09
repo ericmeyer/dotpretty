@@ -17,20 +17,20 @@ describe "Parsing test output" do
   end
 
   it "parses a test suite with one passing test" do
-    actual_output = parse_input("single_passing_test-IN.log")
-    expected_output = Fixtures.read("single_passing_test-OUT.log")
+    actual_output = parse_input("dotnet_input/single_passing_test.log")
+    expected_output = Fixtures.read("basic_reporter_output/single_passing_test.log")
     expect(actual_output).to eq(expected_output)
   end
 
   it "parses a test suite with one passing and one failing test" do
-    actual_output = parse_input("single_failing_test-IN.log")
-    expected_output = Fixtures.read("single_failing_test-OUT.log")
+    actual_output = parse_input("dotnet_input/single_failing_test.log")
+    expected_output = Fixtures.read("basic_reporter_output/single_failing_test.log")
     expect(actual_output).to eq(expected_output)
   end
 
   it "parses a test suite with the last test failing" do
-    actual_output = parse_input("last_test_failing-IN.log")
-    expected_output = Fixtures.read("last_test_failing-OUT.log")
+    actual_output = parse_input("dotnet_input/last_test_failing.log")
+    expected_output = Fixtures.read("basic_reporter_output/last_test_failing.log")
     expect(actual_output).to eq(expected_output)
   end
 
