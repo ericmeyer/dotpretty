@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ericmeyer/dotpretty.svg?branch=master)](https://travis-ci.org/ericmeyer/dotpretty)
+[![Gem Version](https://badge.fury.io/rb/dotpretty.svg)](https://badge.fury.io/rb/dotpretty)
 
 # Dotpretty
 
