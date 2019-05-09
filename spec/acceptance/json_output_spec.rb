@@ -17,7 +17,7 @@ describe "Outputting JSON" do
   end
 
   it "parses a test suite with one passing test" do
-    raw_output = parse_input("single_passing_test-IN.log")
+    raw_output = parse_input("dotnet_input/single_passing_test.log")
     parsed_output = JSON.parse(raw_output)
     expect(parsed_output).to eq({
       "tests" => [{
@@ -28,7 +28,7 @@ describe "Outputting JSON" do
   end
 
   it "parses a test suite with one failing test" do
-    raw_output = parse_input("single_failing_test-IN.log")
+    raw_output = parse_input("dotnet_input/single_failing_test.log")
     parsed_output = JSON.parse(raw_output)
     expect(parsed_output).to eq({
       "tests" => [{
@@ -50,7 +50,7 @@ describe "Outputting JSON" do
   end
 
   it "parses a test suite with multiple failing tests" do
-    raw_output = parse_input("last_test_failing-IN.log")
+    raw_output = parse_input("dotnet_input/last_test_failing.log")
     parsed_output = JSON.parse(raw_output)
     expect(parsed_output).to eq({
       "tests" => [{
