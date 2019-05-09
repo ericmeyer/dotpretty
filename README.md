@@ -23,9 +23,9 @@ Ordinarily, you will probably want to suppress stderr output.
 ### Command Options
 
 | Flag | Use | Default | Values |
-|---|
+|------|-----|---------|--------|
 |`-h`, `--help`| Display this help | | |
-|`-r`, `--reporter`| Reporter to use to format output | basic | basic, json |
+|`-r`, `--reporter`| Reporter to use to format output | basic | basic, json, progress |
 
 ## Development
 
