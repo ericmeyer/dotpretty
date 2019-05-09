@@ -1,0 +1,19 @@
+Build started
+Build completed
+
+Starting test execution
+F.
+
+Failures:
+
+  1) SampleProjectTests.UnitTest1.Test2
+
+      Error Message:
+       Assert.Equal() Failure
+      Expected: 1
+      Actual:   2
+      Stack Trace:
+         at SampleProjectTests.UnitTest1.Test2() in /path/to/workspace/SampleSolution/SampleProjectTests/UnitTest1.cs:line 15
+
+
+Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.

@@ -4,8 +4,9 @@ module Dotpretty
 
       BASIC = "basic"
       JSON = "json"
+      PROGRESS = "progress"
 
-      ALL = [BASIC, JSON]
+      ALL = [ BASIC, JSON, PROGRESS ]
     end
   end
 end
