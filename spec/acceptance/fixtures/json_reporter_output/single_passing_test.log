@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {
+      "name": "SampleProjectTests.UnitTest1.Test1",
+      "result": "passed"
+    }
+  ]
+}

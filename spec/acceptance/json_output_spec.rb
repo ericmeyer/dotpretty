@@ -1,7 +1,7 @@
 require "acceptance/fixtures"
 require "dotpretty/parser"
 require "dotpretty/reporters/json"
-require "json"
+require "neatjson"
 require "stringio"
 
 describe "Outputting JSON" do
@@ -13,18 +13,18 @@ describe "Outputting JSON" do
     Fixtures.each_line(filename) do |line|
       parser.parse_line(line)
     end
-    return output.string
+    neatjson_options = {
+      after_colon: 1,
+      sort: true,
+      wrap: true
+    }
+    return JSON.neat_generate(JSON.parse(output.string), neatjson_options) + "\n"
   end
 
   it "parses a test suite with one passing test" do
-    raw_output = parse_input("dotnet_input/single_passing_test.log")
-    parsed_output = JSON.parse(raw_output)
-    expect(parsed_output).to eq({
-      "tests" => [{
-        "name" => "SampleProjectTests.UnitTest1.Test1",
-        "result" => "passed"
-      }]
-    })
+    actual_output = parse_input("dotnet_input/single_passing_test.log")
+    expected_output = Fixtures.read("json_reporter_output/single_passing_test.log")
+    expect(actual_output).to eq(expected_output)
   end
 
   it "parses a test suite with one failing test" do
