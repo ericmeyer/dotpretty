@@ -7,14 +7,14 @@ module Dotpretty
   module Reporters
     class Factory
 
-      def self.build_reporter(name, output)
+      def self.build_reporter(name, options = {})
         case name
         when Dotpretty::Reporters::Names::JSON
-          return Dotpretty::Reporters::Json.new(output)
+          return Dotpretty::Reporters::Json.new(options.fetch(:output))
         when Dotpretty::Reporters::Names::PROGRESS
-          return Dotpretty::Reporters::Progress.new(output)
+          return Dotpretty::Reporters::Progress.new(options.fetch(:output))
         else
-          return Dotpretty::Reporters::Basic.new(output)
+          return Dotpretty::Reporters::Basic.new(options.fetch(:output))
         end
       end
 

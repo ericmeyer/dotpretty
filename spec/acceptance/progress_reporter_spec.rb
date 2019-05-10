@@ -9,7 +9,9 @@ describe "Progress reporter" do
   def parse_input(filename)
     output = StringIO.new
     progress = Dotpretty::Reporters::Names::PROGRESS
-    reporter = Dotpretty::Reporters::Factory.build_reporter(progress, output)
+    reporter = Dotpretty::Reporters::Factory.build_reporter(progress, {
+      output: output
+    })
     parser = Dotpretty::Parser.new({ reporter: reporter })
 
     Fixtures.each_line(filename) do |line|

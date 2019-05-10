@@ -29,7 +29,9 @@ OptionParser.new do |opts|
 end.parse!
 
 
-reporter = Dotpretty::Reporters::Factory.build_reporter(options[:reporter_name], STDOUT)
+reporter = Dotpretty::Reporters::Factory.build_reporter(options[:reporter_name], {
+  output: STDOUT
+})
 parser = Dotpretty::Parser.new({ reporter: reporter })
 
 STDIN.each_line do |line|
