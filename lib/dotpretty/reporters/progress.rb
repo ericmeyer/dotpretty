@@ -2,7 +2,8 @@ module Dotpretty
   module Reporters
     class Progress
 
-      def initialize(output)
+      def initialize(colorer:, output:)
+        self.extend(colorer)
         self.failing_tests = []
         self.output = output
       end
@@ -29,11 +30,11 @@ module Dotpretty
 
       def test_failed(failing_test)
         failing_tests << failing_test
-        output.print("F")
+        output.print(red("F"))
       end
 
       def test_passed(passing_test)
-        output.print(".")
+        output.print(green("."))
       end
 
       private

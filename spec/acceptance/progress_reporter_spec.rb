@@ -1,22 +1,18 @@
-require "dotpretty/parser"
-require "dotpretty/reporters/factory"
+require "dotpretty/runner"
 require "dotpretty/reporters/names"
 require "stringio"
 require "acceptance/fixtures"
 
 describe "Progress reporter" do
 
-  def parse_input(filename)
+  def parse_input(filename, options = {})
     output = StringIO.new
-    progress = Dotpretty::Reporters::Names::PROGRESS
-    reporter = Dotpretty::Reporters::Factory.build_reporter(progress, {
-      output: output
+    runner = Dotpretty::Runner.new({
+      colorer: Dotpretty::Colorers::Null,
+      output: output,
+      reporter_name: Dotpretty::Reporters::Names::PROGRESS
     })
-    parser = Dotpretty::Parser.new({ reporter: reporter })
-
-    Fixtures.each_line(filename) do |line|
-      parser.parse_line(line)
-    end
+    Fixtures.each_line(filename) { |line| runner.parse_line(line) }
     return output.string
   end
 

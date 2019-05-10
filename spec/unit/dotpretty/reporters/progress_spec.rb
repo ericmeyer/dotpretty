@@ -1,4 +1,5 @@
 require "dotpretty/reporters/progress"
+require "dotpretty/colorers/null"
 require "fakes/reporter"
 require "stringio"
 
@@ -9,7 +10,10 @@ describe Dotpretty::Reporters::Progress do
   end
 
   def build_reporter(output)
-    return Dotpretty::Reporters::Progress.new(output)
+    return Dotpretty::Reporters::Progress.new({
+      colorer: Dotpretty::Colorers::Null,
+      output: output
+    })
   end
 
   describe "Showing test output" do

@@ -1,3 +1,5 @@
+require "dotpretty/runner"
+require "dotpretty/reporters/names"
 require "dotpretty/parser"
 require "dotpretty/reporters/factory"
 require "stringio"
@@ -7,14 +9,12 @@ describe "Parsing test output" do
 
   def parse_input(filename)
     output = StringIO.new
-    reporter = Dotpretty::Reporters::Factory.build_reporter(Dotpretty::Reporters::Names::BASIC, {
-      output: output
+    runner = Dotpretty::Runner.new({
+      colorer: Dotpretty::Colorers::Null,
+      output: output,
+      reporter_name: Dotpretty::Reporters::Names::BASIC
     })
-    parser = Dotpretty::Parser.new({ reporter: reporter })
-
-    Fixtures.each_line(filename) do |line|
-      parser.parse_line(line)
-    end
+    Fixtures.each_line(filename) { |line| runner.parse_line(line) }
     return output.string
   end
 

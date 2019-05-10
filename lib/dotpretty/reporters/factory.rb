@@ -1,3 +1,4 @@
+require "dotpretty/colorers/null"
 require "dotpretty/reporters/basic"
 require "dotpretty/reporters/json"
 require "dotpretty/reporters/names"
@@ -12,7 +13,10 @@ module Dotpretty
         when Dotpretty::Reporters::Names::JSON
           return Dotpretty::Reporters::Json.new(options.fetch(:output))
         when Dotpretty::Reporters::Names::PROGRESS
-          return Dotpretty::Reporters::Progress.new(options.fetch(:output))
+          return Dotpretty::Reporters::Progress.new({
+            colorer: Dotpretty::Colorers::Null,
+            output: options.fetch(:output)
+          })
         else
           return Dotpretty::Reporters::Basic.new(options.fetch(:output))
         end
