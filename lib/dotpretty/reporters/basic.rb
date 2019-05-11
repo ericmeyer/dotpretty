@@ -21,11 +21,11 @@ module Dotpretty
       end
 
       def test_passed(test_name)
-        output.puts(green("Passed   #{test_name}"))
+        output.puts("#{green("Passed")}   #{test_name}")
       end
 
       def test_failed(failing_test)
-        output.puts(red("Failed   #{failing_test[:name]}"))
+        output.puts("#{red("Failed")}   #{failing_test[:name]}")
         failing_test[:details].each do |line|
           output.puts(line)
         end
