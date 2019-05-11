@@ -14,7 +14,7 @@ module Dotpretty
           return Dotpretty::Reporters::Json.new(options.fetch(:output))
         when Dotpretty::Reporters::Names::PROGRESS
           return Dotpretty::Reporters::Progress.new({
-            colorer: Dotpretty::Colorers::Null,
+            colorer: options.fetch(:colorer),
             output: options.fetch(:output)
           })
         else

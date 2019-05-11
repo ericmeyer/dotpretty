@@ -20,6 +20,7 @@ describe Dotpretty::Reporters::Factory do
 
   it "builds a progress reporter" do
     reporter = Dotpretty::Reporters::Factory.build_reporter(Dotpretty::Reporters::Names::PROGRESS, {
+      colorer: Dotpretty::Colorers::Null,
       output: StringIO.new
     })
     expect(reporter).to be_kind_of(Dotpretty::Reporters::Progress)

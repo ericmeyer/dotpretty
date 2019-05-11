@@ -43,7 +43,7 @@ module Dotpretty
         output.puts("Failures:")
         output.puts("")
         failing_tests.each_with_index do |failing_test, index|
-          output.puts("  #{index + 1}) #{failing_test[:name]}")
+          output.puts(red("  #{index + 1}) #{failing_test[:name]}"))
           output.puts("")
           failing_test[:details].each do |detail|
             output.puts("      #{detail}")
