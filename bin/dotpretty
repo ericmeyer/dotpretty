@@ -1,14 +1,18 @@
 #!/usr/bin/env ruby
 
-require "dotpretty/parser"
-require "dotpretty/reporters/factory"
+require "dotpretty/colorers/null"
 require "dotpretty/reporters/names"
+require "dotpretty/runner"
 require "optparse"
 
 options = {}
 OptionParser.new do |opts|
 
   opts.banner = "Usage: dotnet test -v=normal Test.Project/ | dotnet [options]"
+
+  opts.on("-c", "--color", "Enable color output") do |color|
+    options[:color] = color
+  end
 
   opts.on("-h", "--help", "Display this help") do
     puts opts
@@ -28,12 +32,9 @@ OptionParser.new do |opts|
 
 end.parse!
 
-
-reporter = Dotpretty::Reporters::Factory.build_reporter(options[:reporter_name], {
-  output: STDOUT
+runner = Dotpretty::Runner.new({
+  colorer: Dotpretty::Colorers::Null,
+  output: STDOUT,
+  reporter_name: options[:reporter_name]
 })
-parser = Dotpretty::Parser.new({ reporter: reporter })
-
-STDIN.each_line do |line|
-  parser.parse_line(line)
-end
+STDIN.each_line { |line| runner.parse_line(line) }
