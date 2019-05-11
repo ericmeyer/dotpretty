@@ -18,7 +18,7 @@ module Dotpretty
       when :waiting
         state_machine.trigger(:build_started)
       when :build_in_progress
-        state_machine.trigger(:build_completed) if input_line.match(BUILD_COMPLETED)
+        state_machine.trigger(:received_build_input, input_line)
       when :ready_to_run_tests
         state_machine.trigger(:tests_started) if input_line.match(TESTS_STARTED)
       when :waiting_for_test_input
@@ -27,6 +27,14 @@ module Dotpretty
         state_machine.trigger(:received_failure_details, input_line)
       when :reading_failure_details
         state_machine.trigger(:received_input_line, input_line)
+      end
+    end
+
+    def parse_build_input(input_line)
+      if input_line.match(BUILD_COMPLETED)
+        state_machine.trigger(:build_completed)
+      else
+        state_machine.trigger(:received_build_input)
       end
     end
 

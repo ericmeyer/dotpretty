@@ -12,7 +12,12 @@ module Dotpretty
           transition :build_started, :build_in_progress, :build_started
         end
         state :build_in_progress do
+          transition :received_build_input, :parsing_build_input
+        end
+        state :parsing_build_input do
+          on_entry :parse_build_input
           transition :build_completed, :ready_to_run_tests, :build_completed
+          transition :received_build_input, :build_in_progress
         end
         state :ready_to_run_tests do
           transition :tests_started, :waiting_for_test_input, :starting_tests
