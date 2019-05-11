@@ -20,7 +20,12 @@ module Dotpretty
           transition :received_build_input, :build_in_progress
         end
         state :ready_to_run_tests do
+          transition :received_input_line, :determining_if_tests_started
+        end
+        state :determining_if_tests_started do
+          on_entry :determine_if_tests_started
           transition :tests_started, :waiting_for_test_input, :starting_tests
+          transition :tests_did_not_start, :ready_to_run_tests
         end
         state :waiting_for_test_input do
           transition :test_input_received, :parsing_test_input

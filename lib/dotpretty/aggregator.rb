@@ -20,7 +20,7 @@ module Dotpretty
       when :build_in_progress
         state_machine.trigger(:received_build_input, input_line)
       when :ready_to_run_tests
-        state_machine.trigger(:tests_started) if input_line.match(TESTS_STARTED)
+        state_machine.trigger(:received_input_line, input_line)
       when :waiting_for_test_input
         state_machine.trigger(:test_input_received, input_line)
       when :waiting_for_failure_details
@@ -36,6 +36,15 @@ module Dotpretty
       else
         state_machine.trigger(:received_build_input)
       end
+    end
+
+    def determine_if_tests_started(input_line)
+      if input_line.match(TESTS_STARTED)
+        state_machine.trigger(:tests_started)
+      else
+        state_machine.trigger(:tests_did_not_start)
+      end
+
     end
 
     def parse_test_input(input_line)
