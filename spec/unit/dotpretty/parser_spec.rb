@@ -1,3 +1,4 @@
+require "dotpretty/colorers/null"
 require "dotpretty/parser"
 require "dotpretty/reporters/basic"
 require "stringio"
@@ -6,7 +7,10 @@ describe Dotpretty::Parser do
 
   def build_parser(output)
     return Dotpretty::Parser.new({
-      reporter: Dotpretty::Reporters::Basic.new(output)
+      reporter: Dotpretty::Reporters::Basic.new({
+        colorer: Dotpretty::Colorers::Null,
+        output: output
+      })
     })
   end
 

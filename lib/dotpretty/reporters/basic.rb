@@ -2,7 +2,8 @@ module Dotpretty
   module Reporters
     class Basic
 
-      def initialize(output)
+      def initialize(colorer:, output:)
+        self.extend(colorer)
         self.output = output
       end
 
@@ -20,11 +21,11 @@ module Dotpretty
       end
 
       def test_passed(test_name)
-        output.puts("Passed   #{test_name}")
+        output.puts(green("Passed   #{test_name}"))
       end
 
       def test_failed(failing_test)
-        output.puts("Failed   #{failing_test[:name]}")
+        output.puts(red("Failed   #{failing_test[:name]}"))
         failing_test[:details].each do |line|
           output.puts(line)
         end

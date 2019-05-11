@@ -18,7 +18,10 @@ module Dotpretty
             output: options.fetch(:output)
           })
         else
-          return Dotpretty::Reporters::Basic.new(options.fetch(:output))
+          return Dotpretty::Reporters::Basic.new({
+            colorer: options.fetch(:colorer),
+            output: options.fetch(:output)
+          })
         end
       end
 
