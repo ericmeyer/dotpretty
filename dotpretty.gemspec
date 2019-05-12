@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.name = "dotpretty"
   s.summary = "A gem to improve dotnet output"
-  s.version = "0.4.0"
+  s.version = "0.5.0"
 end
