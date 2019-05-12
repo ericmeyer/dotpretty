@@ -39,10 +39,21 @@ module Dotpretty
       end
 
       def show_test_summary(summary)
-        output.puts("\nTotal tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}.\n")
+        message = colored_message(summary)
+        output.puts("")
+        output.puts("#{message}")
       end
 
       private
+
+      def colored_message(summary)
+        message = "Total tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}."
+        if summary[:passedTests] == summary[:totalTests]
+          return green(message)
+        else
+          return red(message)
+        end
+      end
 
       attr_accessor :output
 
