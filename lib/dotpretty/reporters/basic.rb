@@ -16,6 +16,13 @@ module Dotpretty
         output.puts("")
       end
 
+      def build_failed(failure_details)
+        output.puts("Build failed")
+        failure_details.each do |detail|
+          output.puts(detail)
+        end
+      end
+
       def starting_tests
         output.puts("Starting test execution...")
       end

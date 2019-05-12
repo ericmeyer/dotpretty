@@ -16,6 +16,10 @@ module Dotpretty
       parser.parse_line(line)
     end
 
+    def done_with_input
+      parser.done_with_input
+    end
+
     private
 
     attr_accessor :parser

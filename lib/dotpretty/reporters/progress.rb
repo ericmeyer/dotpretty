@@ -17,6 +17,9 @@ module Dotpretty
         output.puts("Build started")
       end
 
+      def build_failed(failure_details)
+      end
+
       def show_test_summary(summary)
         output.puts("")
         output.puts("")

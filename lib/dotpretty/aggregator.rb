@@ -2,6 +2,7 @@ module Dotpretty
   class Aggregator
 
     BUILD_COMPLETED = /^Build completed/
+    BUILD_FAILED = /^Build FAILED.$/
     TEST_FAILED = /^Failed/
     TEST_PASSED = /^Passed/
     TEST_SUMMARY = /^Total tests/
@@ -19,6 +20,8 @@ module Dotpretty
         state_machine.trigger(:build_started)
       when :build_in_progress
         state_machine.trigger(:received_build_input, input_line)
+      when :reading_build_failure_details
+        state_machine.trigger(:received_build_failure_details, input_line)
       when :ready_to_run_tests
         state_machine.trigger(:received_input_line, input_line)
       when :waiting_for_test_input
@@ -33,6 +36,8 @@ module Dotpretty
     def parse_build_input(input_line)
       if input_line.match(BUILD_COMPLETED)
         state_machine.trigger(:build_completed)
+      elsif input_line.match(BUILD_FAILED)
+        state_machine.trigger(:build_failed)
       else
         state_machine.trigger(:received_build_input)
       end
@@ -44,7 +49,6 @@ module Dotpretty
       else
         state_machine.trigger(:tests_did_not_start)
       end
-
     end
 
     def parse_test_input(input_line)
@@ -67,6 +71,18 @@ module Dotpretty
 
     def build_started
       reporter.build_started
+    end
+
+    def reset_build_failure_details
+      self.build_failure_details = []
+    end
+
+    def track_build_failure_details(input_line)
+      build_failure_details << input_line
+    end
+
+    def report_failing_build
+      reporter.build_failed(build_failure_details)
     end
 
     def track_failure_details(details)
@@ -116,7 +132,7 @@ module Dotpretty
 
     private
 
-    attr_accessor :current_failing_test, :reporter
+    attr_accessor :build_failure_details, :current_failing_test, :reporter
 
   end
 end
