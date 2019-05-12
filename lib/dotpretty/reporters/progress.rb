@@ -18,6 +18,10 @@ module Dotpretty
       end
 
       def build_failed(failure_details)
+        output.puts("Build failed")
+        failure_details.each do |detail|
+          output.puts(detail)
+        end
       end
 
       def show_test_summary(summary)
