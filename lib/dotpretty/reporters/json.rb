@@ -15,6 +15,9 @@ module Dotpretty
       def build_completed
       end
 
+      def build_failed(failure_details)
+      end
+
       def starting_tests
       end
 

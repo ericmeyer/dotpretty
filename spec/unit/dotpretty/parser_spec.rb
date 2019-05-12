@@ -189,6 +189,37 @@ describe Dotpretty::Parser do
         expect(output.string).to eq("\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
       end
     end
+
+    context "when the build fails" do
+      it "outputs build failure with no details" do
+        output = StringIO.new
+        parser = build_parser(output)
+        parser.parse_line("Build started 4/17/19 8:22:32 PM.")
+        output.truncate(0)
+        output.rewind
+
+        parser.parse_line("Build FAILED.")
+        parser.done_with_input
+
+        expect(output.string).to eq("Build failed\n")
+      end
+
+      it "outputs build failure with details" do
+        output = StringIO.new
+        parser = build_parser(output)
+        parser.parse_line("Build started 4/17/19 8:22:32 PM.")
+        output.truncate(0)
+        output.rewind
+
+        parser.parse_line("Build FAILED.")
+        parser.parse_line("details1")
+        parser.parse_line("details2")
+        parser.done_with_input
+
+        expect(output.string).to include("details1")
+        expect(output.string).to include("details2")
+      end
+    end
   end
 
 end

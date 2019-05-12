@@ -40,3 +40,4 @@ runner = Dotpretty::Runner.new({
   reporter_name: options[:reporter_name]
 })
 STDIN.each_line { |line| runner.parse_line(line) }
+runner.done_with_input

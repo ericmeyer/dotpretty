@@ -75,4 +75,30 @@ describe Dotpretty::Aggregator do
     end
   end
 
+  describe "Reporting a build failure" do
+    it "shows a build failure with no details" do
+      reporter = double("Reporter", show_build_failure: nil)
+      aggregator = Dotpretty::Aggregator.new({reporter: reporter})
+      aggregator.reset_build_failure_details
+
+      expect(reporter).to receive(:build_failed).with([])
+
+      aggregator.report_failing_build
+    end
+
+    it "shows a build failure with details" do
+      reporter = double("Reporter", show_build_failure: nil)
+      aggregator = Dotpretty::Aggregator.new({reporter: reporter})
+      aggregator.reset_build_failure_details
+
+      expect(reporter).to receive(:build_failed).with([
+        "details1",
+        "details2"
+      ])
+
+      aggregator.track_build_failure_details("details1")
+      aggregator.track_build_failure_details("details2")
+      aggregator.report_failing_build
+    end
+  end
 end

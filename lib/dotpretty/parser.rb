@@ -17,7 +17,12 @@ module Dotpretty
         state :parsing_build_input do
           on_entry :parse_build_input
           transition :build_completed, :ready_to_run_tests, :build_completed
+          transition :build_failed, :reading_build_failure_details, :reset_build_failure_details
           transition :received_build_input, :build_in_progress
+        end
+        state :reading_build_failure_details do
+          transition :received_build_failure_details, :reading_build_failure_details, :track_build_failure_details
+          transition :end_of_input, :done, :report_failing_build
         end
         state :ready_to_run_tests do
           transition :received_input_line, :determining_if_tests_started
@@ -56,6 +61,10 @@ module Dotpretty
 
     def parse_line(input_line)
       aggregator.parse_line(input_line)
+    end
+
+    def done_with_input
+      state_machine.trigger(:end_of_input)
     end
 
     private
