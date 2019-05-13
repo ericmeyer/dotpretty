@@ -4,7 +4,7 @@ require "dotpretty/reporters/json"
 require "json"
 require "stringio"
 
-describe "Outputting JSON" do
+describe "The JSON reporter" do
 
   def parse_input(filename)
     output = StringIO.new
@@ -28,7 +28,7 @@ describe "Outputting JSON" do
   end
 
   it "parses a test suite with one failing test" do
-    raw_output = parse_input("dotnet_input/single_failing_test.log")
+    raw_output = parse_input("dotnet_input/one_passing_one_failing.log")
     parsed_output = JSON.parse(raw_output)
     expect(parsed_output).to eq({
       "tests" => [{

@@ -1,10 +1,11 @@
-require "dotpretty/runner"
-require "dotpretty/reporters/names"
-require "stringio"
 require "acceptance/fixtures"
+require "acceptance/scenarios"
+require "dotpretty/reporters/names"
+require "dotpretty/runner"
 require "fakes/colorer"
+require "stringio"
 
-describe "Progress reporter" do
+describe "The progress reporter" do
 
   def parse_input(filename, options = {})
     output = StringIO.new
@@ -19,36 +20,12 @@ describe "Progress reporter" do
     return output.string
   end
 
-  context "when the build is successful" do
-    it "parses a test suite with one passing test" do
-      actual_output = parse_input("dotnet_input/single_passing_test.log")
-      expected_output = Fixtures.read("progress_reporter_output/single_passing_test.log")
-      expect(actual_output).to eq(expected_output)
-    end
-
-    it "parses a test suite with one passing and one failing test" do
-      actual_output = parse_input("dotnet_input/single_failing_test.log")
-      expected_output = Fixtures.read("progress_reporter_output/single_failing_test.log")
-      expect(actual_output).to eq(expected_output)
-    end
-
-    it "parses a test suite with one passing and one failing test with color" do
-      actual_output = parse_input("dotnet_input/single_failing_test.log", { color: true })
-      expected_output = Fixtures.read("progress_reporter_output/single_failing_test_with_color.log")
-      expect(actual_output).to eq(expected_output)
-    end
-
-    it "parses a test suite with the last test failing" do
-      actual_output = parse_input("dotnet_input/last_test_failing.log")
-      expected_output = Fixtures.read("progress_reporter_output/last_test_failing.log")
-      expect(actual_output).to eq(expected_output)
-    end
-  end
-
-  context "when the build fails" do
-    it "shows the build failure" do
-      actual_output = parse_input("dotnet_input/failing_build.log")
-      expected_output = Fixtures.read("progress_reporter_output/failing_build.log")
+  Dotpretty::AcceptanceTestScenarios::ALL.each do |scenario|
+    it "parses a test suite with #{scenario[:description]}" do
+      actual_output = parse_input("dotnet_input/#{scenario[:filename]}.log", color: scenario[:color])
+      output_filename = scenario[:filename]
+      output_filename += "_with_color" if scenario[:color]
+      expected_output = Fixtures.read("progress_reporter_output/#{output_filename}.log")
       expect(actual_output).to eq(expected_output)
     end
   end
