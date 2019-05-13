@@ -1,5 +1,6 @@
 require "dotpretty/reporters/progress"
 require "dotpretty/colorers/null"
+require "fakes/colorer"
 require "fakes/reporter"
 require "stringio"
 
@@ -9,9 +10,9 @@ describe Dotpretty::Reporters::Progress do
     expect(Dotpretty::Reporters::Progress).to be_substitutable_for(Fakes::Reporter)
   end
 
-  def build_reporter(output)
+  def build_reporter(output, colorer = Dotpretty::Colorers::Null)
     return Dotpretty::Reporters::Progress.new({
-      colorer: Dotpretty::Colorers::Null,
+      colorer: colorer,
       output: output
     })
   end
@@ -46,7 +47,7 @@ describe Dotpretty::Reporters::Progress do
         passedTests: 2,
         skippedTests: 3,
         totalTests: 4
-        })
+      })
 
       expect(output.string.strip).to eq("Total tests: 4. Passed: 2. Failed: 1. Skipped: 3.")
     end
@@ -80,6 +81,36 @@ describe Dotpretty::Reporters::Progress do
       expect(output.string.strip).to include("MyFailingTest")
       expect(output.string.strip).to include("Detail One")
       expect(output.string.strip).to include("Detail Two")
+    end
+
+    context "with color" do
+      it "shows the summary as red when there are failing tests" do
+        output = StringIO.new
+        reporter = build_reporter(output, Fakes::Colorer)
+
+        reporter.show_test_summary({
+          failedTests: 1,
+          passedTests: 2,
+          skippedTests: 3,
+          totalTests: 4
+        })
+
+        expect(output.string.strip).to eq("{red}Total tests: 4. Passed: 2. Failed: 1. Skipped: 3.{reset}")
+      end
+
+      it "shows the summary as green when all tests pass" do
+        output = StringIO.new
+        reporter = build_reporter(output, Fakes::Colorer)
+
+        reporter.show_test_summary({
+          failedTests: 0,
+          passedTests: 7,
+          skippedTests: 0,
+          totalTests: 7
+        })
+
+        expect(output.string.strip).to eq("{green}Total tests: 7. Passed: 7. Failed: 0. Skipped: 0.{reset}")
+      end
     end
   end
 

@@ -28,7 +28,7 @@ module Dotpretty
         output.puts("")
         output.puts("")
         show_failure_summary if !failing_tests.empty?
-        output.puts("Total tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}.\n")
+        output.puts(formatted_test_summary(summary))
       end
 
       def starting_tests
@@ -46,6 +46,15 @@ module Dotpretty
 
       private
 
+      def formatted_test_summary(summary)
+        message = "Total tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}."
+        if summary[:totalTests] == summary[:passedTests]
+          return green(message)
+        else
+          return red(message)
+        end
+      end
+
       def show_failure_summary
         output.puts("Failures:")
         output.puts("")
@@ -59,7 +68,6 @@ module Dotpretty
         end
         output.puts("")
       end
-
       attr_accessor :failing_tests, :output
 
     end
