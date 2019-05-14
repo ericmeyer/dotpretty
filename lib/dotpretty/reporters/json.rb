@@ -29,6 +29,10 @@ module Dotpretty
       end
 
       def test_skipped(test_name)
+        tests << {
+          name: test_name,
+          result: "skipped"
+        }
       end
 
       def test_failed(failing_test)

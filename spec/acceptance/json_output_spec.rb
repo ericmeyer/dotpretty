@@ -79,4 +79,15 @@ describe "The JSON reporter" do
     })
   end
 
+  it "parses a test suite with one skipped test" do
+    raw_output = parse_input("dotnet_input/single_skipped_test.log")
+    parsed_output = JSON.parse(raw_output)
+    expect(parsed_output).to eq({
+      "tests" => [{
+        "name" => "SampleProjectTests.UnitTest1.Test1",
+        "result" => "skipped"
+      }]
+    })
+  end
+
 end
