@@ -10,7 +10,8 @@ module Fakes
     define(:starting_tests)
     define(:starting_tests)
     define(:test_failed) { |failing_test| }
-    define(:test_passed) { |passing_test| }
+    define(:test_passed) { |passing_test_name| }
+    define(:test_skipped) { |skipped_test_name| }
 
   end
 end

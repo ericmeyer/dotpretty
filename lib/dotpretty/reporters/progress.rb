@@ -3,8 +3,10 @@ module Dotpretty
     class Progress
 
       def initialize(colorer:, output:)
+        self.colorer = colorer
         self.extend(colorer)
         self.failing_tests = []
+        self.skipped_test_names = []
         self.output = output
       end
 
@@ -27,6 +29,7 @@ module Dotpretty
       def show_test_summary(summary)
         output.puts("")
         output.puts("")
+        show_skipped_summary if !skipped_test_names.empty?
         show_failure_summary if !failing_tests.empty?
         output.puts(formatted_test_summary(summary))
       end
@@ -44,15 +47,18 @@ module Dotpretty
         output.print(green("."))
       end
 
+      def test_skipped(test_name)
+        skipped_test_names << test_name
+        output.print(yellow("*"))
+      end
+
       private
 
       def formatted_test_summary(summary)
-        message = "Total tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}."
-        if summary[:totalTests] == summary[:passedTests]
-          return green(message)
-        else
-          return red(message)
-        end
+        return Dotpretty::Reporters::TestSummaryFormatter.new({
+          colorer: colorer,
+          summary: summary
+        }).colored_message
       end
 
       def show_failure_summary
@@ -68,7 +74,17 @@ module Dotpretty
         end
         output.puts("")
       end
-      attr_accessor :failing_tests, :output
+
+      def show_skipped_summary
+        output.puts("Skipped:")
+        output.puts("")
+        skipped_test_names.each_with_index do |test_name, index|
+          output.puts(yellow("  #{index + 1}) #{test_name}"))
+        end
+        output.puts("")
+      end
+
+      attr_accessor :colorer, :failing_tests, :output, :skipped_test_names
 
     end
   end

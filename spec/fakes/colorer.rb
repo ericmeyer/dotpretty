@@ -9,5 +9,9 @@ module Fakes
       return "{red}#{text}{reset}"
     end
 
+    def yellow(text)
+      return "{yellow}#{text}{reset}"
+    end
+
   end
 end

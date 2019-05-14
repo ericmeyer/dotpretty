@@ -40,6 +40,7 @@ module Dotpretty
           transition :received_other_input, :waiting_for_test_input
           transition :test_failed, :waiting_for_failure_details, :reset_current_failing_test
           transition :test_passed, :waiting_for_test_input, :test_passed
+          transition :test_skipped, :waiting_for_test_input, :test_skipped
           transition :tests_completed, :done, :show_test_summary
         end
         state :waiting_for_failure_details do
