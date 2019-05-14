@@ -25,6 +25,10 @@ module Dotpretty
       color: false,
       description: "one skipped test",
       filename: "single_skipped_test"
+    }, {
+      color: true,
+      description: "one skipped test",
+      filename: "single_skipped_test"
     }]
 
   end

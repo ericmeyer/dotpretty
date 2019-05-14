@@ -1,8 +1,11 @@
+require "dotpretty/reporters/test_summary_formatter"
+
 module Dotpretty
   module Reporters
     class Basic
 
       def initialize(colorer:, output:)
+        self.colorer = colorer
         self.extend(colorer)
         self.output = output
       end
@@ -32,7 +35,7 @@ module Dotpretty
       end
 
       def test_skipped(test_name)
-        output.puts("Skipped  #{test_name}")
+        output.puts("#{yellow("Skipped")}  #{test_name}")
       end
 
       def test_failed(failing_test)
@@ -51,15 +54,13 @@ module Dotpretty
       private
 
       def colored_message(summary)
-        message = "Total tests: #{summary[:totalTests]}. Passed: #{summary[:passedTests]}. Failed: #{summary[:failedTests]}. Skipped: #{summary[:skippedTests]}."
-        if summary[:passedTests] == summary[:totalTests]
-          return green(message)
-        else
-          return red(message)
-        end
+        return Dotpretty::Reporters::TestSummaryFormatter.new({
+          colorer: colorer,
+          summary: summary
+        }).colored_message
       end
 
-      attr_accessor :output
+      attr_accessor :colorer, :output
 
     end
   end

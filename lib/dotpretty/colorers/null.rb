@@ -10,6 +10,10 @@ module Dotpretty
         text
       end
 
+      def yellow(text)
+        text
+      end
+
     end
   end
 end
