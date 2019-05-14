@@ -5,6 +5,7 @@ module Dotpretty
     BUILD_FAILED = /^Build FAILED.$/
     TEST_FAILED = /^Failed/
     TEST_PASSED = /^Passed/
+    TEST_SKIPPED = /^Skipped/
     TEST_SUMMARY = /^Total tests/
     TESTS_STARTED = /^Starting test execution, please wait...$/
 
@@ -58,6 +59,9 @@ module Dotpretty
       elsif input_line.match(TEST_FAILED)
         match = input_line.match(/^Failed\s+(.+)$/)
         state_machine.trigger(:test_failed, match[1])
+      elsif input_line.match(TEST_SKIPPED)
+        match = input_line.match(/^Skipped\s+(.+)$/)
+        state_machine.trigger(:test_skipped, match[1])
       elsif input_line.match(TEST_SUMMARY)
         state_machine.trigger(:tests_completed, input_line)
       else
@@ -128,6 +132,10 @@ module Dotpretty
 
     def test_passed(test_name)
       reporter.test_passed(test_name)
+    end
+
+    def test_skipped(test_name)
+      reporter.test_skipped(test_name)
     end
 
     private

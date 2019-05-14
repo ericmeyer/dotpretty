@@ -97,6 +97,20 @@ describe Dotpretty::Parser do
         expect(output.string).to eq("Passed   SampleProjectTests.UnitTest1.Test1\nPassed   SampleProjectTests.UnitTest1.Test2\n")
       end
 
+      it "shows a skipped test" do
+        output = StringIO.new
+        parser = build_parser(output)
+        parser.parse_line("Build started 4/17/19 8:22:32 PM.")
+        parser.parse_line("Build completed")
+        parser.parse_line("Starting test execution, please wait...")
+        output.truncate(0)
+        output.rewind
+
+        parser.parse_line("Skipped  SampleProjectTests.UnitTest1.Test1")
+
+        expect(output.string).to eq("Skipped  SampleProjectTests.UnitTest1.Test1\n")
+      end
+
       it "ignores startup output" do
         output = StringIO.new
         parser = build_parser(output)

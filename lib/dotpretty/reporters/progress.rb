@@ -5,6 +5,7 @@ module Dotpretty
       def initialize(colorer:, output:)
         self.extend(colorer)
         self.failing_tests = []
+        self.skipped_test_names = []
         self.output = output
       end
 
@@ -27,6 +28,7 @@ module Dotpretty
       def show_test_summary(summary)
         output.puts("")
         output.puts("")
+        show_skipped_summary if !skipped_test_names.empty?
         show_failure_summary if !failing_tests.empty?
         output.puts(formatted_test_summary(summary))
       end
@@ -42,6 +44,11 @@ module Dotpretty
 
       def test_passed(passing_test)
         output.print(green("."))
+      end
+
+      def test_skipped(test_name)
+        skipped_test_names << test_name
+        output.print("*")
       end
 
       private
@@ -68,7 +75,17 @@ module Dotpretty
         end
         output.puts("")
       end
-      attr_accessor :failing_tests, :output
+
+      def show_skipped_summary
+        output.puts("Skipped:")
+        output.puts("")
+        skipped_test_names.each_with_index do |test_name, index|
+          output.puts("  #{index + 1}) #{test_name}")
+        end
+        output.puts("")
+      end
+
+      attr_accessor :failing_tests, :output, :skipped_test_names
 
     end
   end

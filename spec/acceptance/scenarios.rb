@@ -21,6 +21,10 @@ module Dotpretty
       color: false,
       description: "a failing build",
       filename: "failing_build"
+    }, {
+      color: false,
+      description: "one skipped test",
+      filename: "single_skipped_test"
     }]
 
   end

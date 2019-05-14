@@ -31,6 +31,10 @@ module Dotpretty
         output.puts("#{green("Passed")}   #{test_name}")
       end
 
+      def test_skipped(test_name)
+        output.puts("Skipped  #{test_name}")
+      end
+
       def test_failed(failing_test)
         output.puts("#{red("Failed")}   #{failing_test[:name]}")
         failing_test[:details].each do |line|
