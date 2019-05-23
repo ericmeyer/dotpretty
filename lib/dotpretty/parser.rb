@@ -1,13 +1,13 @@
 require "dotpretty/aggregator"
 require "dotpretty/reporters/basic"
-require "dotpretty/state_machine_builder"
+require "dotpretty/state_machine/state_machine_builder"
 
 module Dotpretty
   class Parser
 
     def initialize(reporter:)
       self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
-      self.state_machine = Dotpretty::StateMachineBuilder.build(aggregator) do
+      self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(aggregator) do
         state :waiting do
           transition :build_started, :build_in_progress, :build_started
         end
