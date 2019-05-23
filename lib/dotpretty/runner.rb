@@ -4,10 +4,10 @@ require "dotpretty/reporters/factory"
 module Dotpretty
   class Runner
 
-    def initialize(colorer:, output:, reporter_name:)
+    def initialize(color_palette:, output:, reporter_name:)
       reporter = Dotpretty::Reporters::Factory.build_reporter(reporter_name, {
         output: output,
-        colorer: colorer
+        color_palette: color_palette
       })
       self.parser = Dotpretty::Parser.new({ reporter: reporter })
     end

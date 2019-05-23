@@ -4,9 +4,9 @@ module Dotpretty
   module Reporters
     class Basic
 
-      def initialize(colorer:, output:)
-        self.colorer = colorer
-        self.extend(colorer)
+      def initialize(color_palette:, output:)
+        self.color_palette = color_palette
+        self.extend(color_palette)
         self.output = output
       end
 
@@ -55,12 +55,12 @@ module Dotpretty
 
       def colored_message(summary)
         return Dotpretty::Reporters::TestSummaryFormatter.new({
-          colorer: colorer,
+          color_palette: color_palette,
           summary: summary
         }).colored_message
       end
 
-      attr_accessor :colorer, :output
+      attr_accessor :color_palette, :output
 
     end
   end

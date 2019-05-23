@@ -2,9 +2,9 @@ module Dotpretty
   module Reporters
     class Progress
 
-      def initialize(colorer:, output:)
-        self.colorer = colorer
-        self.extend(colorer)
+      def initialize(color_palette:, output:)
+        self.color_palette = color_palette
+        self.extend(color_palette)
         self.failing_tests = []
         self.skipped_test_names = []
         self.output = output
@@ -56,7 +56,7 @@ module Dotpretty
 
       def formatted_test_summary(summary)
         return Dotpretty::Reporters::TestSummaryFormatter.new({
-          colorer: colorer,
+          color_palette: color_palette,
           summary: summary
         }).colored_message
       end
@@ -84,7 +84,7 @@ module Dotpretty
         output.puts("")
       end
 
-      attr_accessor :colorer, :failing_tests, :output, :skipped_test_names
+      attr_accessor :color_palette, :failing_tests, :output, :skipped_test_names
 
     end
   end

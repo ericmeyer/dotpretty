@@ -1,4 +1,4 @@
-require "dotpretty/colorers/null"
+require "dotpretty/color_palettes/null"
 require "dotpretty/reporters/basic"
 require "dotpretty/reporters/json"
 require "dotpretty/reporters/names"
@@ -14,12 +14,12 @@ module Dotpretty
           return Dotpretty::Reporters::Json.new(options.fetch(:output))
         when Dotpretty::Reporters::Names::PROGRESS
           return Dotpretty::Reporters::Progress.new({
-            colorer: options.fetch(:colorer),
+            color_palette: options.fetch(:color_palette),
             output: options.fetch(:output)
           })
         else
           return Dotpretty::Reporters::Basic.new({
-            colorer: options.fetch(:colorer),
+            color_palette: options.fetch(:color_palette),
             output: options.fetch(:output)
           })
         end

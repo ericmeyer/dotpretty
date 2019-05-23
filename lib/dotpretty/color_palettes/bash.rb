@@ -1,5 +1,5 @@
 module Dotpretty
-  module Colorers
+  module ColorPalettes
     module Bash
 
       RESET="\e[0m"

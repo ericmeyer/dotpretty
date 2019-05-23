@@ -1,5 +1,5 @@
 module Dotpretty
-  module Colorers
+  module ColorPalettes
     module Null
 
       def green(text)

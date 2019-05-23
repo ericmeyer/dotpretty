@@ -1,11 +1,11 @@
 require "dotpretty/reporters/test_summary_formatter"
-require "fakes/colorer"
+require "fakes/color_palette"
 
 describe Dotpretty::Reporters::TestSummaryFormatter do
 
   def colored_message(summary)
     Dotpretty::Reporters::TestSummaryFormatter.new({
-      colorer: Fakes::Colorer,
+      color_palette: Fakes::ColorPalette,
       summary: summary
     }).colored_message
   end

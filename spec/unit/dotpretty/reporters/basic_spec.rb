@@ -1,6 +1,6 @@
-require "dotpretty/colorers/null"
+require "dotpretty/color_palettes/null"
 require "dotpretty/reporters/basic"
-require "fakes/colorer"
+require "fakes/color_palette"
 require "fakes/reporter"
 
 describe Dotpretty::Reporters::Basic do
@@ -9,9 +9,9 @@ describe Dotpretty::Reporters::Basic do
     expect(Dotpretty::Reporters::Basic).to be_substitutable_for(Fakes::Reporter)
   end
 
-  def build_reporter(output, colorer = Dotpretty::Colorers::Null)
+  def build_reporter(output, color_palette = Dotpretty::ColorPalettes::Null)
     return Dotpretty::Reporters::Basic.new({
-      colorer: colorer,
+      color_palette: color_palette,
       output: output
     })
   end
@@ -36,7 +36,7 @@ describe Dotpretty::Reporters::Basic do
     context "with color" do
       it "displays the summary in red when there are failures" do
         output = StringIO.new
-        reporter = build_reporter(output, Fakes::Colorer)
+        reporter = build_reporter(output, Fakes::ColorPalette)
 
         reporter.show_test_summary({
           failedTests: 1,
@@ -50,7 +50,7 @@ describe Dotpretty::Reporters::Basic do
 
       it "displays the summary in green when there are only passing tests" do
         output = StringIO.new
-        reporter = build_reporter(output, Fakes::Colorer)
+        reporter = build_reporter(output, Fakes::ColorPalette)
 
         reporter.show_test_summary({
           failedTests: 0,

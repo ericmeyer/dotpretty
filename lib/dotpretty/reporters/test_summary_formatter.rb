@@ -2,8 +2,8 @@ module Dotpretty
   module Reporters
     class TestSummaryFormatter
 
-      def initialize(colorer:, summary:)
-        self.extend(colorer)
+      def initialize(color_palette:, summary:)
+        self.extend(color_palette)
         self.summary = summary
       end
 
