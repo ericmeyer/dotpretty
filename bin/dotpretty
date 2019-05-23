@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "dotpretty/colorers/bash"
-require "dotpretty/colorers/null"
+require "dotpretty/color_palettes/bash"
+require "dotpretty/color_palettes/null"
 require "dotpretty/reporters/names"
 require "dotpretty/runner"
 require "optparse"
@@ -33,9 +33,9 @@ OptionParser.new do |opts|
 
 end.parse!
 
-colorer = options[:color] ? Dotpretty::Colorers::Bash : Dotpretty::Colorers::Null
+color_palette = options[:color] ? Dotpretty::ColorPalettes::Bash : Dotpretty::ColorPalettes::Null
 runner = Dotpretty::Runner.new({
-  colorer: colorer,
+  color_palette: color_palette,
   output: STDOUT,
   reporter_name: options[:reporter_name]
 })

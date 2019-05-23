@@ -2,16 +2,16 @@ require "acceptance/fixtures"
 require "acceptance/scenarios"
 require "dotpretty/reporters/names"
 require "dotpretty/runner"
-require "fakes/colorer"
+require "fakes/color_palette"
 require "stringio"
 
 describe "The progress reporter" do
 
   def parse_input(filename, options = {})
     output = StringIO.new
-    colorer = options[:color] ? Fakes::Colorer : Dotpretty::Colorers::Null
+    color_palette = options[:color] ? Fakes::ColorPalette : Dotpretty::ColorPalettes::Null
     runner = Dotpretty::Runner.new({
-      colorer: colorer,
+      color_palette: color_palette,
       output: output,
       reporter_name: Dotpretty::Reporters::Names::PROGRESS
     })

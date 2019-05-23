@@ -1,10 +1,10 @@
 require "rspec"
-require "dotpretty/state_machine_builder"
+require "dotpretty/state_machine/state_machine_builder"
 
-describe Dotpretty::StateMachineBuilder do
+describe Dotpretty::StateMachine::StateMachineBuilder do
 
   def build(observer=nil, &definition)
-    return Dotpretty::StateMachineBuilder.build(observer, &definition)
+    return Dotpretty::StateMachine::StateMachineBuilder.build(observer, &definition)
   end
 
   describe "Building the state machine" do

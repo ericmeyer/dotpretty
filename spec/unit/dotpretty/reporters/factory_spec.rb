@@ -6,7 +6,7 @@ describe Dotpretty::Reporters::Factory do
 
   it "builds a basic reporter" do
     reporter = Dotpretty::Reporters::Factory.build_reporter(Dotpretty::Reporters::Names::BASIC, {
-      colorer: Dotpretty::Colorers::Null,
+      color_palette: Dotpretty::ColorPalettes::Null,
       output: StringIO.new
     })
     expect(reporter).to be_kind_of(Dotpretty::Reporters::Basic)
@@ -21,7 +21,7 @@ describe Dotpretty::Reporters::Factory do
 
   it "builds a progress reporter" do
     reporter = Dotpretty::Reporters::Factory.build_reporter(Dotpretty::Reporters::Names::PROGRESS, {
-      colorer: Dotpretty::Colorers::Null,
+      color_palette: Dotpretty::ColorPalettes::Null,
       output: StringIO.new
     })
     expect(reporter).to be_kind_of(Dotpretty::Reporters::Progress)
@@ -29,7 +29,7 @@ describe Dotpretty::Reporters::Factory do
 
   it "defaults to a basic reporter" do
     reporter = Dotpretty::Reporters::Factory.build_reporter(nil, {
-      colorer: Dotpretty::Colorers::Null,
+      color_palette: Dotpretty::ColorPalettes::Null,
       output: StringIO.new
     })
     expect(reporter).to be_kind_of(Dotpretty::Reporters::Basic)

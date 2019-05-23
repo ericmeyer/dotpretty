@@ -1,5 +1,5 @@
 module Fakes
-  module Colorer
+  module ColorPalette
 
     def green(text)
       return "{green}#{text}{reset}"
