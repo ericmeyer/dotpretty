@@ -1,3 +1,5 @@
+require_relative "./lib/dotpretty/version"
+
 Gem::Specification.new do |s|
   s.authors = [ "Eric Meyer" ]
   s.date = "2019-05-02"
@@ -8,5 +10,5 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.name = "dotpretty"
   s.summary = "A gem to improve dotnet output"
-  s.version = "0.8.0"
+  s.version = Dotpretty::VERSION
 end

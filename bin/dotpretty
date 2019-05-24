@@ -4,6 +4,7 @@ require "dotpretty/color_palettes/bash"
 require "dotpretty/color_palettes/null"
 require "dotpretty/reporters/names"
 require "dotpretty/runner"
+require "dotpretty/version"
 require "optparse"
 
 options = {}
@@ -27,6 +28,7 @@ OptionParser.new do |opts|
   end
 
   if STDIN.tty?
+    puts "Version: #{Dotpretty::VERSION}"
     $stderr.puts opts.help
     exit 1
   end
