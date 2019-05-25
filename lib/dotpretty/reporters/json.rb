@@ -21,24 +21,26 @@ module Dotpretty
       def starting_tests
       end
 
-      def test_passed(test_name)
+      def test_passed(name:)
         tests << {
-          name: test_name,
+          name: name,
           result: "passed"
         }
       end
 
-      def test_skipped(test_name)
+      def test_skipped(name:)
         tests << {
-          name: test_name,
+          name: name,
           result: "skipped"
         }
       end
 
-      def test_failed(failing_test)
-        tests << failing_test.merge({
+      def test_failed(name:, details:)
+        tests << {
+          details: details,
+          name: name,
           result: "failed"
-        })
+        }
       end
 
       def show_test_summary(summary)

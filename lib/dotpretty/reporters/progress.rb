@@ -38,17 +38,20 @@ module Dotpretty
         output.puts("Starting test execution")
       end
 
-      def test_failed(failing_test)
-        failing_tests << failing_test
+      def test_failed(name:, details:)
+        failing_tests << {
+          details: details,
+          name: name
+        }
         output.print(red("F"))
       end
 
-      def test_passed(passing_test)
+      def test_passed(name:)
         output.print(green("."))
       end
 
-      def test_skipped(test_name)
-        skipped_test_names << test_name
+      def test_skipped(name:)
+        skipped_test_names << name
         output.print(yellow("*"))
       end
 

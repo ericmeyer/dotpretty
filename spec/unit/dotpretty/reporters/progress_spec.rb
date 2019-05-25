@@ -22,7 +22,7 @@ describe Dotpretty::Reporters::Progress do
       output = StringIO.new
       reporter = build_reporter(output)
 
-      reporter.test_passed(nil)
+      reporter.test_passed({ name: "Foo" })
 
       expect(output.string).to eq(".")
     end
@@ -31,7 +31,7 @@ describe Dotpretty::Reporters::Progress do
       output = StringIO.new
       reporter = build_reporter(output)
 
-      reporter.test_failed({})
+      reporter.test_failed({ name: "Foo", details: [] })
 
       expect(output.string).to eq("F")
     end

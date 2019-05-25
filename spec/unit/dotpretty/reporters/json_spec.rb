@@ -37,7 +37,7 @@ describe Dotpretty::Reporters::Json do
       it "outputs a summary with that test" do
         output = StringIO.new
         reporter = build_json_reporter(output)
-        reporter.test_passed("MyTest")
+        reporter.test_passed({ name: "MyTest" })
 
         reporter.show_test_summary({
           failedTests: 0,
