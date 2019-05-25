@@ -1,4 +1,4 @@
-require "dotpretty/aggregator"
+require "dotpretty/parser"
 require "dotpretty/reporters/basic"
 require "dotpretty/state_machine/state_machine_builder"
 
@@ -6,8 +6,8 @@ module Dotpretty
   class Runner
 
     def initialize(reporter:)
-      self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
-      self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(aggregator) do
+      self.parser = Dotpretty::Parser.new({ reporter: reporter })
+      self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(parser) do
         state :waiting do
           transition :build_started, :build_in_progress, :build_started
         end
@@ -57,11 +57,11 @@ module Dotpretty
           transition :tests_completed, :done, :show_test_summary
         end
       end
-      aggregator.state_machine = state_machine
+      parser.state_machine = state_machine
     end
 
     def input_received(input_line)
-      aggregator.parse_line(input_line)
+      parser.parse_line(input_line)
     end
 
     def done_with_input
@@ -70,7 +70,7 @@ module Dotpretty
 
     private
 
-    attr_accessor :aggregator, :output, :state_machine
+    attr_accessor :parser, :output, :state_machine
 
   end
 end

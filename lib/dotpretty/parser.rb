@@ -1,5 +1,5 @@
 module Dotpretty
-  class Aggregator
+  class Parser
 
     BUILD_COMPLETED = /^Build completed/
     BUILD_FAILED = /^Build FAILED.$/
