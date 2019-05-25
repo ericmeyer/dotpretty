@@ -1,76 +1,149 @@
-require "dotpretty/aggregator"
-require "dotpretty/reporters/basic"
-require "dotpretty/state_machine/state_machine_builder"
-
 module Dotpretty
   class Parser
 
+    BUILD_COMPLETED = /^Build completed/
+    BUILD_FAILED = /^Build FAILED.$/
+    TEST_FAILED = /^Failed/
+    TEST_PASSED = /^Passed/
+    TEST_SKIPPED = /^Skipped/
+    TEST_SUMMARY = /^Total tests/
+    TESTS_STARTED = /^Starting test execution, please wait...$/
+
+    attr_accessor :state_machine
+
     def initialize(reporter:)
-      self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
-      self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(aggregator) do
-        state :waiting do
-          transition :build_started, :build_in_progress, :build_started
-        end
-        state :build_in_progress do
-          transition :received_build_input, :parsing_build_input
-        end
-        state :parsing_build_input do
-          on_entry :parse_build_input
-          transition :build_completed, :ready_to_run_tests, :build_completed
-          transition :build_failed, :reading_build_failure_details, :reset_build_failure_details
-          transition :received_build_input, :build_in_progress
-        end
-        state :reading_build_failure_details do
-          transition :received_build_failure_details, :reading_build_failure_details, :track_build_failure_details
-          transition :end_of_input, :done, :report_failing_build
-        end
-        state :ready_to_run_tests do
-          transition :received_input_line, :determining_if_tests_started
-        end
-        state :determining_if_tests_started do
-          on_entry :determine_if_tests_started
-          transition :tests_started, :waiting_for_test_input, :starting_tests
-          transition :tests_did_not_start, :ready_to_run_tests
-        end
-        state :waiting_for_test_input do
-          transition :test_input_received, :parsing_test_input
-        end
-        state :parsing_test_input do
-          on_entry :parse_test_input
-          transition :received_other_input, :waiting_for_test_input
-          transition :test_failed, :waiting_for_failure_details, :reset_current_failing_test
-          transition :test_passed, :waiting_for_test_input, :test_passed
-          transition :test_skipped, :waiting_for_test_input, :test_skipped
-          transition :tests_completed, :done, :show_test_summary
-        end
-        state :waiting_for_failure_details do
-          transition :received_failure_details, :reading_failure_details
-        end
-        state :reading_failure_details do
-          on_entry :parse_failure_line
-          transition :done_reading_failure, :parsing_test_input, :report_failing_test
-          transition :received_failure_output, :waiting_for_failure_details, :track_failure_details
-        end
-        state :parsing_failure_line do
-          on_entry :parse_failure_line
-          transition :received_failure_output, :reading_failure_details, :track_failure_details
-          transition :tests_completed, :done, :show_test_summary
-        end
-      end
-      aggregator.state_machine = state_machine
+      self.reporter = reporter
     end
 
     def parse_line(input_line)
-      aggregator.parse_line(input_line)
+      case state_machine.current_state_name
+      when :waiting
+        state_machine.trigger(:build_started)
+      when :build_in_progress
+        state_machine.trigger(:received_build_input, input_line)
+      when :reading_build_failure_details
+        state_machine.trigger(:received_build_failure_details, input_line)
+      when :ready_to_run_tests
+        state_machine.trigger(:received_input_line, input_line)
+      when :waiting_for_test_input
+        state_machine.trigger(:test_input_received, input_line)
+      when :waiting_for_failure_details
+        state_machine.trigger(:received_failure_details, input_line)
+      when :reading_failure_details
+        state_machine.trigger(:received_input_line, input_line)
+      end
     end
 
-    def done_with_input
-      state_machine.trigger(:end_of_input)
+    def parse_build_input(input_line)
+      if input_line.match(BUILD_COMPLETED)
+        state_machine.trigger(:build_completed)
+      elsif input_line.match(BUILD_FAILED)
+        state_machine.trigger(:build_failed)
+      else
+        state_machine.trigger(:received_build_input)
+      end
+    end
+
+    def determine_if_tests_started(input_line)
+      if input_line.match(TESTS_STARTED)
+        state_machine.trigger(:tests_started)
+      else
+        state_machine.trigger(:tests_did_not_start)
+      end
+    end
+
+    def parse_test_input(input_line)
+      if input_line.match(TEST_PASSED)
+        match = input_line.match(/^Passed\s+(.+)$/)
+        state_machine.trigger(:test_passed, match[1])
+      elsif input_line.match(TEST_FAILED)
+        match = input_line.match(/^Failed\s+(.+)$/)
+        state_machine.trigger(:test_failed, match[1])
+      elsif input_line.match(TEST_SKIPPED)
+        match = input_line.match(/^Skipped\s+(.+)$/)
+        state_machine.trigger(:test_skipped, match[1])
+      elsif input_line.match(TEST_SUMMARY)
+        state_machine.trigger(:tests_completed, input_line)
+      else
+        state_machine.trigger(:received_other_input)
+      end
+    end
+
+    def build_completed
+      reporter.build_completed
+    end
+
+    def build_started
+      reporter.build_started
+    end
+
+    def reset_build_failure_details
+      self.build_failure_details = []
+    end
+
+    def track_build_failure_details(input_line)
+      build_failure_details << input_line
+    end
+
+    def report_failing_build
+      reporter.build_failed(build_failure_details)
+    end
+
+    def track_failure_details(details)
+      current_failing_test[:details] << details.rstrip if details.rstrip != ""
+    end
+
+    def show_test_summary(summary)
+      match = summary.match(/^Total tests: (\d+). Passed: (\d+). Failed: (\d+). Skipped: (\d+)./)
+      reporter.show_test_summary({
+        failedTests: match[3].to_i,
+        passedTests: match[2].to_i,
+        skippedTests: match[4].to_i,
+        totalTests: match[1].to_i
+      })
+    end
+
+    def report_failing_test(*_)
+      reporter.test_failed({
+        details: current_failing_test[:details],
+        name: current_failing_test[:name]
+      })
+    end
+
+    def parse_failure_line(input_line)
+      if input_line.match(TEST_PASSED)
+        state_machine.trigger(:done_reading_failure, input_line)
+      elsif input_line.match(TEST_SUMMARY)
+        state_machine.trigger(:done_reading_failure, input_line)
+      elsif input_line.match(TEST_FAILED)
+        state_machine.trigger(:done_reading_failure, input_line)
+      else
+        state_machine.trigger(:received_failure_output, input_line)
+      end
+    end
+
+    def starting_tests
+      reporter.starting_tests
+    end
+
+    def reset_current_failing_test(test_name)
+      self.current_failing_test = {
+        details: [],
+        name: test_name
+      }
+    end
+
+    def test_passed(name)
+      reporter.test_passed({ name: name })
+    end
+
+    def test_skipped(name)
+      reporter.test_skipped({ name: name })
     end
 
     private
 
-    attr_accessor :aggregator, :output, :state_machine
+    attr_accessor :build_failure_details, :current_failing_test, :reporter
 
   end
 end
