@@ -1,7 +1,7 @@
 require "acceptance/fixtures"
 require "acceptance/scenarios"
 require "dotpretty/options"
-require "dotpretty/parser"
+require "dotpretty/runner"
 require "dotpretty/reporters/factory"
 require "dotpretty/reporters/names"
 require "fakes/color_palette"
@@ -17,9 +17,9 @@ describe "The basic reporter" do
       output: output,
       reporter_name: Dotpretty::Reporters::Names::BASIC
     })
-    parser = Dotpretty::Parser.new({ reporter: options.reporter })
-    Fixtures.each_line(filename) { |line| parser.parse_line(line) }
-    parser.done_with_input
+    runner = Dotpretty::Runner.new({ reporter: options.reporter })
+    Fixtures.each_line(filename) { |line| runner.input_received(line) }
+    runner.done_with_input
     return output.string
   end
 

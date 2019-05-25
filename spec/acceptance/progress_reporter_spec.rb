@@ -14,9 +14,9 @@ describe "The progress reporter" do
       output: output,
       reporter_name: Dotpretty::Reporters::Names::PROGRESS
     })
-    parser = Dotpretty::Parser.new({ reporter: options.reporter })
-    Fixtures.each_line(filename) { |line| parser.parse_line(line) }
-    parser.done_with_input
+    runner = Dotpretty::Runner.new({ reporter: options.reporter })
+    Fixtures.each_line(filename) { |line| runner.input_received(line) }
+    runner.done_with_input
     return output.string
   end
 

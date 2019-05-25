@@ -3,7 +3,7 @@ require "dotpretty/reporters/basic"
 require "dotpretty/state_machine/state_machine_builder"
 
 module Dotpretty
-  class Parser
+  class Runner
 
     def initialize(reporter:)
       self.aggregator = Dotpretty::Aggregator.new({ reporter: reporter })
@@ -60,7 +60,7 @@ module Dotpretty
       aggregator.state_machine = state_machine
     end
 
-    def parse_line(input_line)
+    def input_received(input_line)
       aggregator.parse_line(input_line)
     end
 

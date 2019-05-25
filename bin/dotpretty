@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "dotpretty/options"
-require "dotpretty/parser"
+require "dotpretty/runner"
 require "dotpretty/reporters/names"
 require "dotpretty/version"
 require "optparse"
@@ -40,6 +40,6 @@ options = Dotpretty::Options.build({
   reporter_name: command_line_args.fetch(:reporter_name, Dotpretty::Reporters::Names::BASIC)
 })
 
-parser = Dotpretty::Parser.new({ reporter: options.reporter })
-STDIN.each_line { |line| parser.parse_line(line) }
-parser.done_with_input
+runner = Dotpretty::Runner.new({ reporter: options.reporter })
+STDIN.each_line { |line| runner.input_received(line) }
+runner.done_with_input
