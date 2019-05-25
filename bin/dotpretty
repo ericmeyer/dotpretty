@@ -1,19 +1,18 @@
 #!/usr/bin/env ruby
 
-require "dotpretty/color_palettes/bash"
-require "dotpretty/color_palettes/null"
+require "dotpretty/options"
+require "dotpretty/parser"
 require "dotpretty/reporters/names"
-require "dotpretty/runner"
 require "dotpretty/version"
 require "optparse"
 
-options = {}
+command_line_args = {}
 OptionParser.new do |opts|
 
   opts.banner = "Usage: dotnet test -v=normal Test.Project/ | dotnet [options]"
 
   opts.on("-c", "--color", "Enable color output") do |color|
-    options[:color] = color
+    command_line_args[:color] = color
   end
 
   opts.on("-h", "--help", "Display this help") do
@@ -24,7 +23,7 @@ OptionParser.new do |opts|
   all_reporter_names = Dotpretty::Reporters::Names::ALL
   reporter_message = ["Set reporter. Defaults to basic", "Available reporters: #{all_reporter_names.join(", ")}"]
   opts.on("-rREPORTER", "--reporter=REPORTER", *reporter_message) do |reporter_name|
-    options[:reporter_name] = reporter_name
+    command_line_args[:reporter_name] = reporter_name
   end
 
   if STDIN.tty?
@@ -35,11 +34,12 @@ OptionParser.new do |opts|
 
 end.parse!
 
-color_palette = options[:color] ? Dotpretty::ColorPalettes::Bash : Dotpretty::ColorPalettes::Null
-runner = Dotpretty::Runner.new({
-  color_palette: color_palette,
+options = Dotpretty::Options.build({
+  color: command_line_args.fetch(:color, false),
   output: STDOUT,
-  reporter_name: options[:reporter_name]
+  reporter_name: command_line_args.fetch(:reporter_name, Dotpretty::Reporters::Names::BASIC)
 })
-STDIN.each_line { |line| runner.parse_line(line) }
-runner.done_with_input
+
+parser = Dotpretty::Parser.new({ reporter: options.reporter })
+STDIN.each_line { |line| parser.parse_line(line) }
+parser.done_with_input
