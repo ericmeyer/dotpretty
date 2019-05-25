@@ -103,8 +103,11 @@ module Dotpretty
       })
     end
 
-    def report_failing_test(*args)
-      reporter.test_failed(current_failing_test)
+    def report_failing_test(*_)
+      reporter.test_failed({
+        details: current_failing_test[:details],
+        name: current_failing_test[:name]
+      })
     end
 
     def parse_failure_line(input_line)
@@ -130,12 +133,12 @@ module Dotpretty
       }
     end
 
-    def test_passed(test_name)
-      reporter.test_passed(test_name)
+    def test_passed(name)
+      reporter.test_passed({ name: name })
     end
 
-    def test_skipped(test_name)
-      reporter.test_skipped(test_name)
+    def test_skipped(name)
+      reporter.test_skipped({ name: name })
     end
 
     private
