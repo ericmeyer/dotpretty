@@ -13,7 +13,7 @@ describe "The basic reporter" do
     output = StringIO.new
     color_palette = options[:color] ? Fakes::ColorPalette : Dotpretty::ColorPalettes::Null
     options = Dotpretty::Options.new({
-      color_palette: color_palette,
+      color: options[:color],
       output: output,
       reporter_name: Dotpretty::Reporters::Names::BASIC
     })

@@ -1,3 +1,5 @@
+require "surrogate"
+
 module Fakes
   module ColorPalette
 

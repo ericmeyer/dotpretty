@@ -24,7 +24,7 @@ describe Dotpretty::Options do
       output = StringIO.new
 
       expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, {
-        color_palette: Dotpretty::ColorPalettes::Bash,
+        color: true,
         output: output
       })
 
@@ -40,7 +40,7 @@ describe Dotpretty::Options do
       output = StringIO.new
 
       expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, {
-        color_palette: Dotpretty::ColorPalettes::Null,
+        color: false,
         output: output
       })
 

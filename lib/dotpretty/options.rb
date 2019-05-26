@@ -6,32 +6,29 @@ module Dotpretty
   class Options
 
     def self.build(command_line_args)
-      reporter_name = command_line_args.fetch(:reporter_name)
-      color_palette = command_line_args[:color] ? Dotpretty::ColorPalettes::Bash : Dotpretty::ColorPalettes::Null
       return Dotpretty::Options.new({
-        color_palette: color_palette,
+        color: command_line_args.fetch(:color),
         output: command_line_args.fetch(:output),
-        reporter_name: reporter_name
+        reporter_name: command_line_args.fetch(:reporter_name)
       })
     end
 
-    def initialize(color_palette:, output:, reporter_name:)
-      self.color_palette = color_palette
+    def initialize(color:, output:, reporter_name:)
+      self.color = color
       self.output = output
       self.reporter_name = reporter_name
     end
 
     def reporter
       return Dotpretty::Reporters::Factory.build_reporter(reporter_name, {
-        color_palette: color_palette,
+        color: color,
         output: output
       })
-
     end
 
     private
 
-    attr_accessor :color_palette, :output, :reporter_name
+    attr_accessor :color, :output, :reporter_name
 
   end
 end

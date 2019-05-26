@@ -1,12 +1,18 @@
 #!/usr/bin/env ruby
 
+require "dotpretty/color_palettes/bash"
+require "dotpretty/container"
 require "dotpretty/options"
 require "dotpretty/runner"
 require "dotpretty/reporters/names"
 require "dotpretty/version"
 require "optparse"
 
-command_line_args = {}
+command_line_args = {
+  color: false,
+  output: STDOUT,
+  reporter_name: Dotpretty::Reporters::Names::BASIC
+}
 OptionParser.new do |opts|
 
   opts.banner = "Usage: dotnet test -v=normal Test.Project/ | dotnet [options]"
@@ -34,11 +40,10 @@ OptionParser.new do |opts|
 
 end.parse!
 
-options = Dotpretty::Options.build({
-  color: command_line_args.fetch(:color, false),
-  output: STDOUT,
-  reporter_name: command_line_args.fetch(:reporter_name, Dotpretty::Reporters::Names::BASIC)
-})
+Dotpretty::Container.register(:color_palette) do
+  Dotpretty::ColorPalettes::Bash
+end
+options = Dotpretty::Options.build(command_line_args)
 
 runner = Dotpretty::Runner.new({ reporter: options.reporter })
 STDIN.each_line { |line| runner.input_received(line) }

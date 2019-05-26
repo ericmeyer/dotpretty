@@ -1,3 +1,5 @@
+require "surrogate"
+
 module Fakes
   class Reporter
 
