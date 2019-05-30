@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
-require "dotpretty/options"
-require "dotpretty/runner"
+require "dotpretty/color_palettes/bash"
+require "dotpretty/reporters/factory"
 require "dotpretty/reporters/names"
+require "dotpretty/runner"
 require "dotpretty/version"
 require "optparse"
 
@@ -34,12 +35,15 @@ OptionParser.new do |opts|
 
 end.parse!
 
-options = Dotpretty::Options.build({
+factory = Dotpretty::Reporters::Factory.new({
+  color_palette: Dotpretty::ColorPalettes::Bash,
+  output: STDOUT
+})
+reporter = factory.build_reporter({
   color: command_line_args.fetch(:color, false),
-  output: STDOUT,
-  reporter_name: command_line_args.fetch(:reporter_name, Dotpretty::Reporters::Names::BASIC)
+  name: command_line_args.fetch(:reporter_name, Dotpretty::Reporters::Names::BASIC)
 })
 
-runner = Dotpretty::Runner.new({ reporter: options.reporter })
+runner = Dotpretty::Runner.new({ reporter: reporter })
 STDIN.each_line { |line| runner.input_received(line) }
 runner.done_with_input

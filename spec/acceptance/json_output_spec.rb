@@ -1,6 +1,6 @@
 require "acceptance/fixtures"
+require "dotpretty/reporters/names"
 require "dotpretty/runner"
-require "dotpretty/reporters/json"
 require "json"
 require "stringio"
 
@@ -8,11 +8,12 @@ describe "The JSON reporter" do
 
   def parse_input(filename)
     output = StringIO.new
-    reporter = Dotpretty::Reporters::Json.new(output)
+    reporter = reporter_factory({ output: output }).build_reporter({
+      name: Dotpretty::Reporters::Names::JSON
+    })
     runner = Dotpretty::Runner.new({ reporter: reporter })
-    Fixtures.each_line(filename) do |line|
-      runner.input_received(line)
-    end
+    Fixtures.each_line(filename) { |line| runner.input_received(line) }
+    runner.done_with_input
     return output.string
   end
 
