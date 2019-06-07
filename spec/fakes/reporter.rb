@@ -4,6 +4,7 @@ module Fakes
     Surrogate.endow(self)
 
     define(:build_completed)
+    define(:build_failed_to_start) { |raw_input_inlines| }
     define(:build_failed) { |failure_details| }
     define(:build_started)
     define(:show_test_summary) { |test_summary| }

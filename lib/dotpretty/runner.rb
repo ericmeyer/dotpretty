@@ -9,11 +9,13 @@ module Dotpretty
       self.parser = Dotpretty::Parser.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(parser) do
         state :waiting_for_build_to_start do
+          transition :build_failed_to_start, :done, :build_failed_to_start
           transition :received_input_line, :determining_if_build_started
         end
         state :determining_if_build_started do
           on_entry :parse_prebuild_input
           transition :build_started, :build_in_progress, :build_started
+          transition :build_did_not_start, :waiting_for_build_to_start
         end
         state :build_in_progress do
           transition :received_build_input, :parsing_build_input
@@ -69,7 +71,7 @@ module Dotpretty
     end
 
     def done_with_input
-      state_machine.trigger(:end_of_input)
+      parser.handle_end_of_input
     end
 
     private

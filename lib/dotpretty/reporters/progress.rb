@@ -15,6 +15,12 @@ module Dotpretty
         output.puts("")
       end
 
+      def build_failed_to_start(raw_input_inlines)
+        raw_input_inlines.each do |raw_input_line|
+          output.puts(raw_input_line)
+        end
+      end
+
       def build_started
         output.puts("Build started")
       end

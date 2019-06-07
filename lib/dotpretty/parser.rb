@@ -13,10 +13,12 @@ module Dotpretty
     attr_accessor :state_machine
 
     def initialize(reporter:)
+      self.raw_input_inlines = []
       self.reporter = reporter
     end
 
     def parse_line(input_line)
+      raw_input_inlines << input_line
       case state_machine.current_state_name
       when :waiting_for_build_to_start
         state_machine.trigger(:received_input_line, input_line)
@@ -35,8 +37,25 @@ module Dotpretty
       end
     end
 
+    def handle_end_of_input
+      case state_machine.current_state_name
+      when :waiting_for_build_to_start
+        state_machine.trigger(:build_failed_to_start)
+      else
+        state_machine.trigger(:end_of_input)
+      end
+    end
+
     def parse_prebuild_input(input_line)
-      state_machine.trigger(:build_started) if input_line.match(BUILD_STARTED)
+      if input_line.match(BUILD_STARTED)
+        state_machine.trigger(:build_started)
+      else
+        state_machine.trigger(:build_did_not_start)
+      end
+    end
+
+    def build_failed_to_start
+      reporter.build_failed_to_start(raw_input_inlines)
     end
 
     def parse_build_input(input_line)
@@ -148,7 +167,7 @@ module Dotpretty
 
     private
 
-    attr_accessor :build_failure_details, :current_failing_test, :reporter
+    attr_accessor :build_failure_details, :current_failing_test, :raw_input_inlines, :reporter
 
   end
 end
