@@ -1,5 +1,6 @@
 require "dotpretty/reporters/factory"
 require "dotpretty/reporters/names"
+require "fakes/http_client"
 require "stringio"
 
 describe Dotpretty::Reporters::Factory do
@@ -10,6 +11,13 @@ describe Dotpretty::Reporters::Factory do
       output: StringIO.new
     })
     expect(reporter).to be_kind_of(Dotpretty::Reporters::Basic)
+  end
+
+  it "builds a browser reporter" do
+    reporter = Dotpretty::Reporters::Factory.build_reporter(Dotpretty::Reporters::Names::BROWSER, {
+      http_client: Fakes::HttpClient.new
+    })
+    expect(reporter).to be_kind_of(Dotpretty::Reporters::Browser)
   end
 
   it "builds a JSON reporter" do

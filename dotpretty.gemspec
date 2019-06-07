@@ -1,6 +1,7 @@
 require_relative "./lib/dotpretty/version"
 
 Gem::Specification.new do |s|
+  s.add_runtime_dependency "httparty", "~> 0.17"
   s.authors = [ "Eric Meyer" ]
   s.date = "2019-05-02"
   s.description = "A gem to parse and improve the output of the dotnet command"

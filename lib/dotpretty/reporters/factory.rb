@@ -1,5 +1,6 @@
 require "dotpretty/color_palettes/null"
 require "dotpretty/reporters/basic"
+require "dotpretty/reporters/browser"
 require "dotpretty/reporters/json"
 require "dotpretty/reporters/names"
 require "dotpretty/reporters/progress"
@@ -10,6 +11,10 @@ module Dotpretty
 
       def self.build_reporter(name, options = {})
         case name
+        when Dotpretty::Reporters::Names::BROWSER
+          return Dotpretty::Reporters::Browser.new({
+            http_client: options.fetch(:http_client)
+          })
         when Dotpretty::Reporters::Names::JSON
           return Dotpretty::Reporters::Json.new(options.fetch(:output))
         when Dotpretty::Reporters::Names::PROGRESS

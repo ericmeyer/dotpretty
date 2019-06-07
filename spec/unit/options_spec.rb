@@ -23,10 +23,10 @@ describe Dotpretty::Options do
       reporter_name = Dotpretty::Reporters::Names::BASIC
       output = StringIO.new
 
-      expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, {
+      expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, hash_including({
         color_palette: Dotpretty::ColorPalettes::Bash,
         output: output
-      })
+      }))
 
       Dotpretty::Options.build({
         color: true,
@@ -39,10 +39,9 @@ describe Dotpretty::Options do
       reporter_name = Dotpretty::Reporters::Names::BASIC
       output = StringIO.new
 
-      expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, {
-        color_palette: Dotpretty::ColorPalettes::Null,
-        output: output
-      })
+      expect(Dotpretty::Reporters::Factory).to receive(:build_reporter).with(reporter_name, hash_including({
+        color_palette: Dotpretty::ColorPalettes::Null
+      }))
 
       Dotpretty::Options.build({
         color: false,
