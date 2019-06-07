@@ -8,7 +8,11 @@ module Dotpretty
     def initialize(reporter:)
       self.parser = Dotpretty::Parser.new({ reporter: reporter })
       self.state_machine = Dotpretty::StateMachine::StateMachineBuilder.build(parser) do
-        state :waiting do
+        state :waiting_for_build_to_start do
+          transition :received_input_line, :determining_if_build_started
+        end
+        state :determining_if_build_started do
+          on_entry :parse_prebuild_input
           transition :build_started, :build_in_progress, :build_started
         end
         state :build_in_progress do

@@ -1,6 +1,7 @@
 module Dotpretty
   class Parser
 
+    BUILD_STARTED = /^Build started/
     BUILD_COMPLETED = /^Build completed/
     BUILD_FAILED = /^Build FAILED.$/
     TEST_FAILED = /^Failed/
@@ -17,8 +18,8 @@ module Dotpretty
 
     def parse_line(input_line)
       case state_machine.current_state_name
-      when :waiting
-        state_machine.trigger(:build_started)
+      when :waiting_for_build_to_start
+        state_machine.trigger(:received_input_line, input_line)
       when :build_in_progress
         state_machine.trigger(:received_build_input, input_line)
       when :reading_build_failure_details
@@ -32,6 +33,10 @@ module Dotpretty
       when :reading_failure_details
         state_machine.trigger(:received_input_line, input_line)
       end
+    end
+
+    def parse_prebuild_input(input_line)
+      state_machine.trigger(:build_started) if input_line.match(BUILD_STARTED)
     end
 
     def parse_build_input(input_line)
