@@ -29,6 +29,14 @@ module Dotpretty
       color: true,
       description: "one skipped test",
       filename: "single_skipped_test"
+    }, {
+      color: false,
+      description: "unknown project",
+      filename: "unknown_project"
+    }, {
+      color: true,
+      description: "unknown project",
+      filename: "unknown_project"
     }]
 
   end

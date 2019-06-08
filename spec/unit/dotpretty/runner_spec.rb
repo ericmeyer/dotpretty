@@ -236,4 +236,16 @@ describe Dotpretty::Runner do
     end
   end
 
+  describe "Ending input in an unknown state" do
+    it "outputs the only received line" do
+      output = StringIO.new
+      runner = build_runner(output)
+      runner.input_received("RANDOM INPUT")
+
+      runner.done_with_input
+
+      expect(output.string).to eq("RANDOM INPUT\n")
+    end
+  end
+
 end

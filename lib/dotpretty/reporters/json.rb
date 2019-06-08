@@ -12,6 +12,9 @@ module Dotpretty
       def build_started
       end
 
+      def build_failed_to_start(raw_input_inlines)
+      end
+
       def build_completed
       end
 

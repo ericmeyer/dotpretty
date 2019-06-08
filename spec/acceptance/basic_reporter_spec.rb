@@ -32,5 +32,4 @@ describe "The basic reporter" do
       expect(actual_output).to eq(expected_output)
     end
   end
-
 end
