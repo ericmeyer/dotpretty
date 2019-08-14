@@ -2,6 +2,7 @@ Build started
 Build completed
 
 Starting test execution...
+
 Skipped  SampleProjectTests.UnitTest1.Test1
 
 Total tests: 1. Passed: 0. Failed: 0. Skipped: 1.

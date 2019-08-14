@@ -28,7 +28,7 @@ describe Dotpretty::Runner do
 
       runner.input_received("Build started 4/17/19 8:22:32 PM.")
 
-      expect(output.string).to eq("Build started\n")
+      expect(output.string.strip).to eq("Build started")
     end
 
     it "ignores build output" do
@@ -64,7 +64,7 @@ describe Dotpretty::Runner do
 
       runner.input_received("Starting test execution, please wait...")
 
-      expect(output.string).to eq("Starting test execution...\n")
+      expect(output.string.strip).to eq("Starting test execution...")
     end
 
     context "when running tests" do
@@ -142,7 +142,7 @@ describe Dotpretty::Runner do
         @runner.input_received("Failed   SampleProjectTests.UnitTest1.Test2")
         @runner.input_received("Passed SomeTest")
 
-        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nPassed   SomeTest\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\n\nPassed   SomeTest\n")
       end
 
       it "shows the failure details" do
@@ -150,7 +150,7 @@ describe Dotpretty::Runner do
         @runner.input_received("Other info")
         @runner.input_received("Passed SomeTest")
 
-        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\nPassed   SomeTest\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\n\nPassed   SomeTest\n")
       end
 
       it "stops parsing the failure when it encounters a passing test" do
@@ -183,7 +183,7 @@ describe Dotpretty::Runner do
 
         @runner.input_received("Total tests: 1. Passed: 1. Failed: 0. Skipped: 0.")
 
-        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\n\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
+        expect(@output.string).to eq("Failed   SampleProjectTests.UnitTest1.Test2\nOther info\n\n\nTotal tests: 1. Passed: 1. Failed: 0. Skipped: 0.\n")
       end
     end
 

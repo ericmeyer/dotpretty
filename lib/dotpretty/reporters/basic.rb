@@ -34,6 +34,7 @@ module Dotpretty
 
       def starting_tests
         output.puts("Starting test execution...")
+        output.puts("")
       end
 
       def test_passed(name:)
@@ -49,6 +50,7 @@ module Dotpretty
         details.each do |line|
           output.puts(line)
         end
+        output.puts("")
       end
 
       def show_test_summary(summary)
